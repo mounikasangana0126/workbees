@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from adminmodule.models.department_model import Department
-from adminmodule.serializer.department_serializer import DepartmentSerializer
+from adminmodule.models.department_model import DepartmentModel
+from adminmodule.versioned.v1.serializer.department_serializer import DepartmentSerializer
 from rest_framework import status
 
 
@@ -11,7 +11,7 @@ class DepartmentGetAPI(APIView):
     def get(self, request, *args, **kwargs):
         """Handle GET requests and return response."""
         
-        queryset = Department.objects.all()
+        queryset = DepartmentModel.objects.all()
         serializer = DepartmentSerializer(queryset, many=True)
         return Response(
             {

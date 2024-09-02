@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models.department_model import Department
+from adminmodule.models.department_model import DepartmentModel
 
 # Register your models here.
 
-admin.site.register(Department)
+admin.site.register(DepartmentModel)

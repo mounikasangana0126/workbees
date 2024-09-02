@@ -1,6 +1,6 @@
 
 from django.urls import path,include
-from adminmodule.api.department_api import DepartmentGetAPI
+from adminmodule.versioned.v1.api.department_api import DepartmentGetAPI
 
 
 urlpatterns = [
