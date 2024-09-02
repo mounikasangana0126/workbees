@@ -1,7 +1,7 @@
 from django.db import models
-from user_model import User
+from adminmodule.models.user_model import User
 from django.utils import timezone
-from time_entry_model import TimeEntry
+from adminmodule.models.time_entry_model import TimeEntry
 
 class BreakEntry(models.Model):
     time_entry = models.ForeignKey(TimeEntry, on_delete=models.CASCADE, related_name='breaks')

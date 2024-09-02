@@ -1,6 +1,8 @@
 from django.db import models
-from user_model import User
-from shift_timings_model import WorkShiftsModel
+from adminmodule.models.user_model import User
+from adminmodule.models.department_model import DepartmentModel
+from adminmodule.models.designation_model import DesignationModel
+from adminmodule.models.shift_timings_model import WorkShiftsModel
 
 class Employees(models.Model):
     STATUS_CHOICES = (
@@ -10,14 +12,14 @@ class Employees(models.Model):
     user= models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to='profile_pics', null=True, blank=True)
     department = models.ForeignKey(
-        Department, 
+        DepartmentModel, 
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True, 
         related_name='employees'
     )
     designation =models.ForeignKey(
-        Designation, 
+        DesignationModel, 
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True, 
@@ -25,7 +27,6 @@ class Employees(models.Model):
     )
     employee_id = models.CharField(max_length=50, unique=True)
     emp_is_active = models.BooleanField(default=True)
-    shift = models.ForeignKey(WorkShiftsModel, on_delete=models.SET_NULL, null=True, blank=True)
     auto_clockout = models.CharField(max_length=10, choices=STATUS_CHOICES, default='INACTIVE')
     location = models.CharField(max_length=255, blank=True, null=True)
     immediate_superior = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='immediate_subordinates')

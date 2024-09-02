@@ -1,5 +1,5 @@
 from django.db import models
-from user_model import User
+from adminmodule.models.user_model import User
 from django.utils import timezone
 
 class TimeEntry(models.Model):
