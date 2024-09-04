@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from adminmodule.models.time_entry_model import TimeEntry
-from adminmodule.versioned.v1.serializer.time_entry_model_serializer import TimeEntrySerializer
+from adminmodule.versioned.v1.serializer.time_entry_serializer import TimeEntrySerializer
 from rest_framework import status
 
 class TimeGetAPI(APIView):

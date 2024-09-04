@@ -2,7 +2,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from adminmodule.models.user_model import User
-from adminmodule.versioned.v1.serializer.user_model_serializer import UserSerializer
+from adminmodule.versioned.v1.serializer.user_serializer import UserSerializer
 from rest_framework import status
 
 class UserGetAPI(APIView):
