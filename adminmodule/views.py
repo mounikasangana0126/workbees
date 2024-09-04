@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from adminmodule.models.authentication_model import AuthenticationModel
 
 # Create your views here.
+
 
 def home(request):
     return render(request, 'index.html', {'messege':"hello"})
