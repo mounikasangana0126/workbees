@@ -1,16 +1,29 @@
 from django.shortcuts import render
-from adminmodule.models.authentication import AuthenticationModel
-
-def home(request):
-    return render(request,'index.html',{'message':'satish here'})
-
-def authentication (request,email,password):
-    queryset=AuthenticationModel.objects.get(email=email)
-    if queryset.password==password:
-        return render(request,'login.html',{'message':'successfully logined'})
-    return render(request,'login.html',{'message':"you entred wrong email or password"})
-
-      
-
 # Create your views here.
 
+
+def home(request):
+    return render(request, 'index.html', {'messege':"hello"})
+
+
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+def login_view(request):
+    # if request.method == 'POST':
+    #     username = request.POST['username']
+    #     password = request.POST['password']
+        
+    #     # Authenticate the user
+    #     user = authenticate(request, username=username, password=password)
+        
+    #     if user is not None:
+    #         # If credentials are correct, log the user in
+    #         login(request, user)
+    #         return redirect('home')  # Redirect to a homepage or another view
+    #     else:
+    #         # If authentication fails, show an error message
+    #         messages.error(request, 'Invalid username or password')
+    
+    return render(request, 'login.html',{'messege':'Hello'})
