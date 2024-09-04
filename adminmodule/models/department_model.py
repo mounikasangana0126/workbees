@@ -13,3 +13,4 @@ class DepartmentModel(models.Model):
 
     def __str__(self):
         return self.dept_name
+    
