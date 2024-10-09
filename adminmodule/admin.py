@@ -8,6 +8,7 @@ from adminmodule.models.task_model import Task
 from adminmodule.models.break_entry_model import BreakEntry
 from adminmodule.models.employee_model import Employees
 from adminmodule.models.shift_timings_model import WorkShiftsModel,UserShiftTimingsModel
+from adminmodule.models.leave_model import Leave
 
 # Register your models here.
 
@@ -21,3 +22,5 @@ admin.site.register(BreakEntry)
 admin.site.register(Employees)
 admin.site.register(WorkShiftsModel)
 admin.site.register(UserShiftTimingsModel)
+admin.site.register(Leave)
+
