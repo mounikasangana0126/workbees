@@ -25,15 +25,16 @@ class Employees(models.Model):
         blank=True, 
         related_name='employees'
     )
+    # DOB
     employee_id = models.CharField(max_length=50, unique=True)
     emp_is_active = models.BooleanField(default=True)
     auto_clockout = models.CharField(max_length=10, choices=STATUS_CHOICES, default='INACTIVE')
     location = models.CharField(max_length=255, blank=True, null=True)
     immediate_superior = models.CharField(max_length=255, blank=True, null=True)
-    functional_superior = models.CharField(max_length=255, blank=True, null=True)
-    hr_superior = models.CharField(max_length=255, blank=True, null=True)
-    is_immediate = models.BooleanField(default=False)
-    is_functional = models.BooleanField(default=False)
+    # functional_superior = models.CharField(max_length=255, blank=True, null=True)
+    # hr_superior = models.CharField(max_length=255, blank=True, null=True)
+    # is_immediate = models.BooleanField(default=False)
+    # is_functional = models.BooleanField(default=False)
     is_hr = models.BooleanField(default=False)
 
     def __str__(self):
@@ -42,8 +43,8 @@ class Employees(models.Model):
     def is_hr(self):
         return self.roles.filter(name='HR').exists()
 
-    def is_functional_manager(self):
-        return self.roles.filter(name='Functional Manager').exists()
+    # def is_functional_manager(self):
+    #     return self.roles.filter(name='Functional Manager').exists()
 
     def is_immediate_manager(self):
         return self.roles.filter(name='Immediate Manager').exists()

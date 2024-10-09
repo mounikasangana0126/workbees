@@ -6,6 +6,7 @@ class Task(models.Model):
     description = models.TextField()
     start_time = models.TimeField()
     end_time = models.TimeField()
+    
 
     def __str__(self):
         return f"Task from {self.start_time} to {self.end_time}"

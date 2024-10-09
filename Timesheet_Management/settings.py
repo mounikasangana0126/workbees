@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'adminmodule',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -70,6 +72,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Timesheet_Management.wsgi.application'
+
 
 
 # Database
@@ -116,10 +119,25 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
+import os
 STATIC_URL = 'static/'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+]
+# settings.py
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  # Default number of items per page
+}
+
