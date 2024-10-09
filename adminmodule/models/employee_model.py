@@ -27,7 +27,7 @@ class Employees(models.Model):
     )
     # DOB
     employee_id = models.CharField(max_length=50, unique=True)
-    emp_is_active = models.BooleanField(default=True)
+    emp_is_active = models.BooleanField(default=True,null=True)
     auto_clockout = models.CharField(max_length=10, choices=STATUS_CHOICES, default='INACTIVE')
     location = models.CharField(max_length=255, blank=True, null=True)
     immediate_superior = models.CharField(max_length=255, blank=True, null=True)
@@ -38,7 +38,7 @@ class Employees(models.Model):
     is_hr = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.username
+        return self.employee_id
 
     def is_hr(self):
         return self.roles.filter(name='HR').exists()
