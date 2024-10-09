@@ -20,14 +20,19 @@ class ShiftTimingGetAPI(APIView):
             status=status.HTTP_200_OK
         )
     def post(self,request,*args,**kwargs):
-        serializer=ShiftTimeSerializer(request.data)
+        queryset=TimeEntry.objects.all()
+        serializer=ShiftTimeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_ok)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    def put(self,request,pk,format=None):
-        queryset=TimeEntry.objects.get(pk=id)
-        serialize=ShiftTimeSerializer(queryset,data=request.data)
+class ShiftTimingDetailGetAPI(APIView):
+    def put(self,request,id):
+        try:
+            queryset=TimeEntry.objects.get(id=id)
+        except:
+            return Response({'error':'Data does not found'},status=status.HTTP_400_BAD_REQUEST)
+        serialize=ShiftTimeSerializer(instance=queryset,data=request.data)
         if serialize.is_valid():
             serialize.save()
             return Response(serialize.data,status=status.HTTP_200_OK)

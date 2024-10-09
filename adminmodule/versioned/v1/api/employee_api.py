@@ -32,7 +32,7 @@ class EmployeeGetAPI(APIView):
         try:
             queryset = Employees.objects.get(pk=id)
         except:
-            return Reponse({"error":"queryset not found"}, status= status.HTTP_400_BAD_REQUEST)
+            return Response({"error":"queryset not found"}, status= status.HTTP_400_BAD_REQUEST)
         
         serializer = EmployeeSerializer(queryset, data = request.data, partial= True)
         
@@ -40,5 +40,18 @@ class EmployeeGetAPI(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+
+class ColourGetAPI(APIView):
+    def get(self, request, id):
+        try:
+            queryset = Employees.objects.get(id=id)
+        except:
+            return Response({'error': 'Data was not found'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if queryset.emp_is_active is True:
+            return Response({'color': 'Green'}, status=status.HTTP_200_OK)
+        
+        return Response({'color': 'Red'}, status=status.HTTP_200_OK)
+        
     
     
