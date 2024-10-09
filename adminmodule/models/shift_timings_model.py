@@ -6,8 +6,8 @@ class WorkShiftsModel(models.Model):
     shift_name = models.CharField(max_length=255)
     shift_start_time = models.TimeField()
     shift_end_time = models.TimeField()
-    break_time= models.TimeField()
-    work_time = models.TimeField()
+    break_time= models.TimeField()  
+    work_time = models.TimeField()  
 
     def save(self, *args, **kwargs):
         self.work_time = self.shift_end_time - self.shift_start_time - self.break_time
