@@ -25,11 +25,12 @@ class Employees(models.Model):
         blank=True, 
         related_name='employees'
     )
-    # DOB
+    date_of_birth = models.DateField(null=True, blank=True)
     employee_id = models.CharField(max_length=50, unique=True)
     emp_is_active = models.BooleanField(default=True,null=True)
     auto_clockout = models.CharField(max_length=10, choices=STATUS_CHOICES, default='INACTIVE')
     location = models.CharField(max_length=255, blank=True, null=True)
+    # address
     immediate_superior = models.CharField(max_length=255, blank=True, null=True)
     # functional_superior = models.CharField(max_length=255, blank=True, null=True)
     # hr_superior = models.CharField(max_length=255, blank=True, null=True)
