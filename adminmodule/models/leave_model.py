@@ -15,7 +15,7 @@ class Leave(models.Model):
     leave_type = models.CharField(max_length=20, choices=LEAVE_TYPE_CHOICES)
     start_date = models.DateField()
     end_date = models.DateField()
-    reason = models.TextField(blank=True, null=True)  # Optional reason for leave
+    reason = models.TextField(blank=True, null=True) 
     status = models.CharField(
         max_length=10,
         choices=(
@@ -25,12 +25,12 @@ class Leave(models.Model):
         ),
         default='PENDING'
     )
-    applied_on = models.DateTimeField(auto_now_add=True)  # Timestamp when leave is applied
-    approved_on = models.DateTimeField(null=True, blank=True)  # When leave is approved, if applicable
+    applied_on = models.DateTimeField(auto_now_add=True) 
+    approved_on = models.DateTimeField(null=True, blank=True)  
 
     def total_days(self):
         """Returns the total number of leave days."""
-        return (self.end_date - self.start_date).days + 1  # +1 to include the start_date
+        return (self.end_date - self.start_date).days + 1 
 
     def __str__(self):
         return f"{self.employee.user.username} - {self.leave_type} from {self.start_date} to {self.end_date}"
