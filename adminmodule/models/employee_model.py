@@ -31,12 +31,11 @@ class Employees(models.Model):
     auto_clockout = models.CharField(max_length=10, choices=STATUS_CHOICES, default='INACTIVE')
     location = models.CharField(max_length=255, blank=True, null=True)
     # address
-    immediate_superior = models.CharField(max_length=255, blank=True, null=True)
     # functional_superior = models.CharField(max_length=255, blank=True, null=True)
     # hr_superior = models.CharField(max_length=255, blank=True, null=True)
     # is_immediate = models.BooleanField(default=False)
     # is_functional = models.BooleanField(default=False)
-    is_hr = models.BooleanField(default=False)
+    # is_hr = models.BooleanField(default=False)
 
     def __str__(self):
         return self.employee_id
