@@ -8,7 +8,7 @@ from rest_framework import status
 class UserGetAPI(APIView):
     """Department Get API View."""
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request,):
             """Handle GET requests and return response."""
             queryset = User.objects.all()
             serializer = UserSerializer(queryset, many=True)

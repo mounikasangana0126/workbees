@@ -20,7 +20,7 @@ class TimeGetAPI(APIView):
             )
     def post(self,request):
             """Handle the post requests and Post the request.data"""
-        
+            
             serializer =TimeEntrySerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()   
@@ -39,3 +39,4 @@ class TimeGetAPI(APIView):
         if serializer.is_avalid():
             serializer.save()
             return Response(serializer.data)
+    

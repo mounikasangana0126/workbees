@@ -40,6 +40,11 @@ class EmployeeGetAPI(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+    def get(self,request,id):
+        snippet=Employees.objects.get(id=id)
+        serializer=EmployeeSerializer(snippet)
+        return Response(serializer.data)
+    
 
 class ColourGetAPI(APIView):
     def get(self, request, id):
