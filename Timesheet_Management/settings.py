@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'adminmodule',
     'rest_framework',
     'corsheaders',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
