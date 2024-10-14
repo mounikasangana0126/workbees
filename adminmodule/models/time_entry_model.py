@@ -1,14 +1,14 @@
 from django.db import models
-from adminmodule.models.user_model import User
+from adminmodule.models.employee_model import Employees
 from django.utils import timezone
 from utils.helper.timestamp_model import TimeStampedModel
 
 class TimeEntry(TimeStampedModel):
     work_mode_choices = [
-        ('WFO', 'WFO'),
-        ('WFH', 'WFH'),
+        ('WFO', 'Work From Office'),
+        ('WFH', 'Work From Home'),
     ]
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employees, on_delete=models.CASCADE)
     date= models.DateField(default=timezone.now)
     clock_in = models.DateTimeField()
     clock_out = models.DateTimeField(null=True, blank=True) 
@@ -16,7 +16,7 @@ class TimeEntry(TimeStampedModel):
     is_completed = models.BooleanField(default=False) 
 
     def __str__(self):
-        return f"{self.user.username} - {self.clock_in} to {self.clock_out}"
+        return f"{self.employee.user.username} - {self.clock_in} to {self.clock_out}"
 
     def total_work_time(self):
         if not self.clock_out:

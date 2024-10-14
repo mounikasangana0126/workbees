@@ -1,5 +1,5 @@
 from django.db import models
-from adminmodule.models.user_model import User
+from django.utils import timezone
 from utils.helper.timestamp_model import TimeStampedModel 
 
 class ParentModel(TimeStampedModel):
@@ -11,7 +11,6 @@ class ParentModel(TimeStampedModel):
 class DepartmentModel(TimeStampedModel):
     dept_name = models.CharField(max_length=255,unique=True)
     dept_code= models.CharField(max_length=255,unique=True)
-    reporting_head=models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     parent = models.ForeignKey(ParentModel,on_delete=models.SET_NULL,null=True)
     dept_is_enabled = models.BooleanField(default=True)
 

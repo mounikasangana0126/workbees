@@ -20,7 +20,7 @@ class Leave(TimeStampedModel):
     leave_type = models.CharField(max_length=20, choices=LEAVE_TYPE_CHOICES)
     start_date = models.DateField()
     end_date = models.DateField()
-    reason = models.TextField(blank=True, null=True) 
+    reason = models.TextField() 
     status = models.CharField(
         max_length=10,
         choices=(
