@@ -1,5 +1,4 @@
 from django.db import models
-from adminmodule.models.employee_model import Employees
 from datetime import datetime,date
 from utils.helper.timestamp_model import TimeStampedModel
 
@@ -19,9 +18,9 @@ class WorkShiftsModel(TimeStampedModel):
     def __str__(self):
         return f"{self.shift_name} ({self.shift_start_time} - {self.shift_end_time})"
     
-class UserShiftTimingsModel(TimeStampedModel):
-    employee = models.ForeignKey(Employees, on_delete=models.CASCADE)
-    shift = models.ForeignKey(WorkShiftsModel, on_delete=models.CASCADE)
+# class UserShiftTimingsModel(TimeStampedModel):
+#     employee = models.ForeignKey(Employees, on_delete=models.CASCADE)
+#     shift = models.ForeignKey(WorkShiftsModel, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"{self.employee} - {self.shift}"
+#     def __str__(self):
+#         return f"{self.employee} - {self.shift}"

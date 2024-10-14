@@ -2,6 +2,7 @@ from django.db import models
 from adminmodule.models.user_model import User
 from adminmodule.models.designation_model import DesignationModel
 from utils.helper.timestamp_model import TimeStampedModel
+from adminmodule.models.shift_timings_model import WorkShiftsModel
 
 class Employees(TimeStampedModel):
     STATUS_CHOICES = (
@@ -20,6 +21,7 @@ class Employees(TimeStampedModel):
     date_of_birth = models.DateField(null=True, blank=True)
     employee_id = models.CharField(max_length=50, unique=True)
     emp_is_active = models.BooleanField(default=True,null=True)
+    employee_shift=models.ForeignKey(WorkShiftsModel, on_delete=models.SET_NULL, null=True, blank=True, related_name='employees')
     auto_clockout = models.CharField(max_length=10, choices=STATUS_CHOICES, default='INACTIVE')
     city = models.CharField(max_length=255, blank=True, null=True)
     joining_date = models.DateField(null=True, blank=True)

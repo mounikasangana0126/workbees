@@ -9,6 +9,16 @@ class BreakEntry(TimeStampedModel):
     break_start = models.DateTimeField()
     break_end = models.DateTimeField(null=True, blank=True) 
 
+    def save(self, *args, **kwargs):
+        if self.break_start and self.break_end:
+            break_duration = (self.break_end - self.break_start).total_seconds()
+            if self.time_entry.clock_out: 
+                self.time_entry.clock_out += timezone.timedelta(seconds=break_duration)
+            else:
+                self.time_entry.clock_out = self.break_end
+            self.time_entry.save()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"Break - {self.break_start} to {self.break_end}"
 
