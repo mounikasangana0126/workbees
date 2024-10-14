@@ -3,8 +3,9 @@ from adminmodule.models.user_model import User
 from adminmodule.models.department_model import DepartmentModel
 from adminmodule.models.designation_model import DesignationModel
 from adminmodule.models.shift_timings_model import WorkShiftsModel
+from utils.helper.timestamp_model import TimeStampedModel
 
-class Employees(models.Model):
+class Employees(TimeStampedModel):
     STATUS_CHOICES = (
         ('ACTIVE', 'Active'),
         ('INACTIVE', 'Inactive'),
@@ -29,7 +30,10 @@ class Employees(models.Model):
     employee_id = models.CharField(max_length=50, unique=True)
     emp_is_active = models.BooleanField(default=True,null=True)
     auto_clockout = models.CharField(max_length=10, choices=STATUS_CHOICES, default='INACTIVE')
-    location = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    joining_date = models.DateField(null=True, blank=True)
+    location=models.TextField(null=True, blank=True)
+
     # address
     # functional_superior = models.CharField(max_length=255, blank=True, null=True)
     # hr_superior = models.CharField(max_length=255, blank=True, null=True)

@@ -28,17 +28,27 @@ class UserGetAPI(APIView):
                 return Response(
                     serializer.data, status =status.HTTP_201_CREATED 
                 )
-            return Response( serializer.error, status =status.HTTP_400_BAD_REQUEST  
+            return Response( serializer.errors, status =status.HTTP_400_BAD_REQUEST  
             )
-    def patch(self,request,id):
+class UserPutAPI(APIView):
+    def put(self,request,id):
         """Handle the patch request and update the request.data."""
         try:
             queryset=User.objects.get(pk=id)
         except:
             return Response({'error':'querry set is not found'},status=status.HTTP_404_NOT_FOUND)
-        serializer =UserSerializer(queryset,data=request.data,parparital=True)
-        if serializer.is_avalid():
+        serializer =UserSerializer(queryset,data=request.data,partial=True)
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    def delete(self,request,id):
+        try:
+            snippet=User.objects.get(id=id)
+        except:
+            return Response({'error':'querry set is not found'},status=status.HTTP_404_NOT_FOUND)
+        snippet.delete()
+        return Response({'message':'deleted successfully'},status=status.HTTP_200_OK)
+
+
 

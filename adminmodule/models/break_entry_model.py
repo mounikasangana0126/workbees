@@ -2,8 +2,9 @@ from django.db import models
 from adminmodule.models.user_model import User
 from django.utils import timezone
 from adminmodule.models.time_entry_model import TimeEntry
+from utils.helper.timestamp_model import TimeStampedModel
 
-class BreakEntry(models.Model):
+class BreakEntry(TimeStampedModel):
     time_entry = models.ForeignKey(TimeEntry, on_delete=models.CASCADE, related_name='breaks')
     break_start = models.DateTimeField()
     break_end = models.DateTimeField(null=True, blank=True) 

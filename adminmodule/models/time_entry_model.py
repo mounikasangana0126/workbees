@@ -1,8 +1,9 @@
 from django.db import models
 from adminmodule.models.user_model import User
 from django.utils import timezone
+from utils.helper.timestamp_model import TimeStampedModel
 
-class TimeEntry(models.Model):
+class TimeEntry(TimeStampedModel):
     work_mode_choices = [
         ('WFO', 'WFO'),
         ('WFH', 'WFH'),

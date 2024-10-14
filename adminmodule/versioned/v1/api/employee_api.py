@@ -25,8 +25,8 @@ class EmployeeGetAPI(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
-    
-    def patch(self, request, id):
+class EmployeePutAPI(APIView):
+    def put(self, request, id):
         """Handle Patch requests and update data in employees model."""
         
         try:
@@ -40,23 +40,21 @@ class EmployeeGetAPI(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+    
     def get(self,request,id):
         snippet=Employees.objects.get(id=id)
         serializer=EmployeeSerializer(snippet)
         return Response(serializer.data)
-    
-
-class ColourGetAPI(APIView):
-    def get(self, request, id):
+    def delete(self, request, id):
+        """Handle DELETE requests and delete data from employees model."""
+        
         try:
-            queryset = Employees.objects.get(id=id)
+            queryset = Employees.objects.get(pk=id)
         except:
-            return Response({'error': 'Data was not found'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error":"queryset not found"}, status= status.HTTP_400_BAD_REQUEST)
         
-        if queryset.emp_is_active is True:
-            return Response({'color': 'Green'}, status=status.HTTP_200_OK)
-        
-        return Response({'color': 'Red'}, status=status.HTTP_200_OK)
+        queryset.delete()
+        return Response({"message":"Employee deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         
     
     

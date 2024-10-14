@@ -2,8 +2,9 @@ from django.db import models
 from adminmodule.models.time_entry_model import TimeEntry
 from adminmodule.models.user_model import User
 from adminmodule.models.department_model import DepartmentModel
+from utils.helper.timestamp_model import TimeStampedModel
 
-class Task(models.Model):
+class Task(TimeStampedModel):
     department = models.ForeignKey(DepartmentModel, on_delete=models.CASCADE)
     STATUS_CHOICES = (
         ('PENDING', 'Pending'),
@@ -22,8 +23,6 @@ class Task(models.Model):
     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_tasks')
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='PENDING')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     due_date = models.DateField(null=True, blank=True)
     
 

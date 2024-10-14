@@ -20,27 +20,26 @@ class CheckInCheckOutAPI(APIView):
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 class CheckInCheckOutDetailsAPI(APIView):
-    def get(self, request,user):
+    def get(self, request,id):
         try:
-            queryset = TimeEntry.objects.filter(user=user)
+            queryset = TimeEntry.objects.filter(id=id)
         except:
             return Response({'message':'user details not found'},status=status.HTTP_400_BAD_REQUEST)
         serializer = TimeEntrySerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    def put(self, request, date):
+    def put(self,request,id,date):
         try:
             queryset = TimeEntry.objects.filter(id=id, clock_in__date=date)
             if not queryset.exists():
                 return Response({'message': 'Time entry not found for the given id and date'}, status=status.HTTP_404_NOT_FOUND)
-            
-            user_name = User.objects.get(username=request.data.get('user'))
-            print(user_name)
+            user_id=request.data.get('user')
+            print(user_id)
+            user=User.objects.get(id=user_id)
+            print(user)
+            print(queryset)
         except User.DoesNotExist:
             return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-        serializer = TimeEntrySerializer(instance=queryset, data=request.data,partial=True)
+        serializer = TimeEntrySerializer(instance=queryset.first(), data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)

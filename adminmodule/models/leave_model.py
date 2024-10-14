@@ -1,7 +1,7 @@
 from django.db import models
 from adminmodule.models.employee_model import Employees
-
-class Leave(models.Model):
+from utils.helper.timestamp_model import TimeStampedModel
+class Leave(TimeStampedModel):
     LEAVE_TYPE_CHOICES = (
         ('SICK', 'Sick Leave'),
         ('VACATION', 'Vacation'),
