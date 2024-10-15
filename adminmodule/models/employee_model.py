@@ -11,17 +11,12 @@ class Employees(models.Model):
     )
     user= models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to='profile_pics', null=True, blank=True)
-    department = models.ForeignKey(
-        DepartmentModel, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True, 
-        related_name='employees'
-    )
+    department = models.ForeignKey(DepartmentModel, on_delete=models.SET_NULL,null=True,
+                                   blank=True,related_name='employees')
     designation =models.ForeignKey(
         DesignationModel, 
         on_delete=models.SET_NULL, 
-        null=True, 
+        null=True,
         blank=True, 
         related_name='employees'
     )

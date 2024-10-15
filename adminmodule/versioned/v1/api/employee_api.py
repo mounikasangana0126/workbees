@@ -32,13 +32,12 @@ class EmployeeGetAPI(APIView):
         try:
             queryset = Employees.objects.get(pk=id)
         except:
-            return Reponse({"error":"queryset not found"}, status= status.HTTP_400_BAD_REQUEST)
+            return Response({"error":"queryset not found"}, status= status.HTTP_400_BAD_REQUEST)
         
         serializer = EmployeeSerializer(queryset, data = request.data, partial= True)
         
         if serializer.is_valid():
-            serializer.save()
+            serializer.save()   
             return Response(serializer.data)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
-    
-    
+
