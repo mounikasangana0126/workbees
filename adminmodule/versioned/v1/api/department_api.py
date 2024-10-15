@@ -4,13 +4,17 @@ from adminmodule.models.department_model import DepartmentModel, ParentModel
 from adminmodule.versioned.v1.serializer.department_serializer import DepartmentSerializer, ParentSerializer
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 class StandardResultsSetPagination(PageNumberPagination):
+    permission_class=[IsAuthenticated]
     page_size = 5
     page_size_query_param = 'page_size'
     max_page_size = 100
 
 class ParentGetAPI(APIView):
+    permission_classes=[IsAuthenticated]
     """Parent Get API View."""
     
     def get(self, request, *args, **kwargs):
@@ -27,6 +31,7 @@ class ParentGetAPI(APIView):
 
 class DepartmentGetAPI(APIView):
     """Department Get API View."""
+    permission_classes=[IsAuthenticated]
     
     pagination_class = StandardResultsSetPagination
 
@@ -57,7 +62,7 @@ class DepartmentGetAPI(APIView):
 
 class DepartmentGetDetailAPI(APIView):
     """Department Detail API View."""
-
+    permission_classes=[IsAuthenticated]
     def get(self, request, id):
         """Retrieve a specific department by ID."""
         try:

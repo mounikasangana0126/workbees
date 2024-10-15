@@ -3,9 +3,11 @@ from rest_framework.views import APIView
 from rest_framework import status
 from adminmodule.models.break_entry_model import BreakEntry
 from adminmodule.versioned.v1.serializer.breakentry_serializer import BreakEntrySerializer
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 class BreakEntryGetAPI(APIView):
-    
+    permission_classes=[IsAuthenticated]
     def get(self,request, *args, **kwargs):
         queryset = BreakEntry.objects.all()
         serializer = BreakEntrySerializer(queryset, many =True)

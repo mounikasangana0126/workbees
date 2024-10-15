@@ -4,10 +4,12 @@ from rest_framework.response import Response
 from adminmodule.models.user_model import User
 from adminmodule.versioned.v1.serializer.user_serializer import UserSerializer
 from rest_framework import status
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 class UserGetAPI(APIView):
     """Department Get API View."""
-
+    permission_classes=[IsAuthenticated]
     def get(self, request,):
             """Handle GET requests and return response."""
             queryset = User.objects.all()
@@ -31,6 +33,7 @@ class UserGetAPI(APIView):
             return Response( serializer.errors, status =status.HTTP_400_BAD_REQUEST  
             )
 class UserPutAPI(APIView):
+    permission_classes=[IsAuthenticated]
     def put(self,request,id):
         """Handle the patch request and update the request.data."""
         try:

@@ -3,10 +3,11 @@ from rest_framework.views import APIView
 from adminmodule.models.time_entry_model import TimeEntry
 from adminmodule.versioned.v1.serializer.shift_timings_serializer import ShiftTimeSerializer
 from rest_framework import status
-
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 class ShiftTimingGetAPI(APIView):
     """Department Get API View."""
-
+    permission_classes=[IsAuthenticated]
     def get(self, request, *args, **kwargs):
         """Handle get request and return response"""
 
@@ -27,6 +28,7 @@ class ShiftTimingGetAPI(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 class ShiftTimingDetailGetAPI(APIView):
+    permission_classes=[IsAuthenticated]
     def put(self,request,id):
         try:
             queryset=TimeEntry.objects.get(id=id)

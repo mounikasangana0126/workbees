@@ -5,8 +5,11 @@ from adminmodule.versioned.v1.serializer.breakentry_serializer import BreakEntry
 from adminmodule.models.break_entry_model import BreakEntry
 from datetime import datetime
 from django.utils import timezone
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 class BreakContinueAPI(APIView):
+    permission_classes=[IsAuthenticated]
     def get(self, request, *args, **kwargs):
         snippet=BreakEntry.objects.all()
         serializer=BreakEntrySerializer(snippet,many=True)

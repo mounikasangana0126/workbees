@@ -4,9 +4,12 @@ from rest_framework.views import APIView
 from adminmodule.models.user_model import User
 from adminmodule.models.time_entry_model import TimeEntry
 from adminmodule.versioned.v1.serializer.time_entry_serializer import TimeEntrySerializer
-import datetime
-
+from adminmodule.models.leave_model import Leave
+from django.utils import timezone
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 class CheckInCheckOutAPI(APIView):
+    permission_classes=[IsAuthenticated]
     def get(self, request, *args, **kwargs):
         data = TimeEntry.objects.all()
         serializer = TimeEntrySerializer(data, many=True)
@@ -20,13 +23,19 @@ class CheckInCheckOutAPI(APIView):
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 class CheckInCheckOutDetailsAPI(APIView):
-    def get(self, request,id):
+    permission_classes=[IsAuthenticated]
+    def get(self, request,id,emp_id):
         try:
+            leave=Leave.objects.filter
             queryset = TimeEntry.objects.filter(id=id)
         except:
             return Response({'message':'user details not found'},status=status.HTTP_400_BAD_REQUEST)
         serializer = TimeEntrySerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'data':serializer.data,
+                        'work_from_home':TimeEntry.objects.filter(work_mode='WFH').count(),
+                        'work_from_office':TimeEntry.objects.filter(work_mode='WFO').count(),
+
+                         },status=status.HTTP_200_OK)
     def put(self,request,id,date):
         try:
             queryset = TimeEntry.objects.filter(id=id, clock_in__date=date)

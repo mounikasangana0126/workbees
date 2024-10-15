@@ -1,16 +1,20 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from adminmodule.models.user_model import User
 from rest_framework import status
 from adminmodule.models.employee_model import Employees
 from adminmodule.versioned.v1.serializer.employee_serializer import EmployeeSerializer
-
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from utils.helper.permission import IsAdminOrReadOnly
 class EmployeeGetAPI(APIView):
-    
+    authentication_classes=[BasicAuthentication]
+    permission_classes=[IsAuthenticated,IsAdminOrReadOnly]
     def get(self,request, *args, **kwargs):
         """Handle GET request and return Response"""
-        
         queryset = Employees.objects.all()
-        serializer = EmployeeSerializer(queryset, many = True)
+
+        serializer = EmployeeSerializer(queryset,many=True)
         return Response({
             "messege":"Employees fetched successfullt",
             "data": serializer.data
@@ -26,6 +30,8 @@ class EmployeeGetAPI(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 class EmployeePutAPI(APIView):
+    authentication_classes=[BasicAuthentication]
+    permission_classes=[IsAuthenticated,IsAdminOrReadOnly]
     def put(self, request, id):
         """Handle Patch requests and update data in employees model."""
         
@@ -42,7 +48,9 @@ class EmployeePutAPI(APIView):
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
     
     def get(self,request,id):
+        """Handle GET request and return Response"""
         snippet=Employees.objects.get(id=id)
+        self.check_object_permissions(request,snippet)
         serializer=EmployeeSerializer(snippet)
         return Response(serializer.data)
     def delete(self, request, id):

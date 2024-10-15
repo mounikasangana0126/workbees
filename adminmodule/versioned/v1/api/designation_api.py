@@ -3,10 +3,12 @@ from rest_framework.views import APIView
 from rest_framework import status
 from adminmodule.models.designation_model import DesignationModel
 from adminmodule.versioned.v1.serializer.designation_serializer import DesignationSerializer
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 class DesignationGetAPI(APIView):
-    
+    permission_classes=[IsAuthenticated]
     def get(self,request, *args, **kwargs):
         """Handle GET request and return Response"""
         

@@ -4,7 +4,7 @@ from adminmodule.models.employee_model import Employees
 
 
 class LeaveSerializer(serializers.ModelSerializer):
-    employees=serializers.StringRelatedField()
+    employees=serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model=Leave
         fields='__all__'
