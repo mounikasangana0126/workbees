@@ -7,6 +7,7 @@ from adminmodule.versioned.v1.api.employee_api import EmployeeGetAPI,EmployeePut
 from adminmodule.versioned.v1.api.checkin_checkout_api import CheckInCheckOutAPI, CheckInCheckOutDetailsAPI
 from adminmodule.versioned.v1.api.leave_api import  LeaveAPI,LeavePutAPI
 from adminmodule.versioned.v1.api.break_continue_api import BreakContinueAPI
+from adminmodule.versioned.v1.api.login_api import LoginAPI
 
 urlpatterns = [
    path('employee_details/<str:id>/',EmployeePutAPI.as_view()),
@@ -22,7 +23,7 @@ urlpatterns = [
    
 
 
-
+   path('login/', LoginAPI.as_view(), name='login'),
 
 
 

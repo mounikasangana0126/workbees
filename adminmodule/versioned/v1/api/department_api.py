@@ -3,21 +3,13 @@ from rest_framework.response import Response
 from adminmodule.models.department_model import DepartmentModel, ParentModel
 from adminmodule.versioned.v1.serializer.department_serializer import DepartmentSerializer, ParentSerializer
 from rest_framework import status
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.authentication import BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
-
-class StandardResultsSetPagination(PageNumberPagination):
-    permission_class=[IsAuthenticated]
-    page_size = 5
-    page_size_query_param = 'page_size'
-    max_page_size = 100
+from utils.helper.permission import SuperuserPermission
 
 class ParentGetAPI(APIView):
-    permission_classes=[IsAuthenticated]
     """Parent Get API View."""
+    permission_classes=[SuperuserPermission]
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         """Handle GET requests and return response."""
         queryset = ParentModel.objects.all()
         serializer = ParentSerializer(queryset, many=True)
@@ -31,24 +23,18 @@ class ParentGetAPI(APIView):
 
 class DepartmentGetAPI(APIView):
     """Department Get API View."""
-    permission_classes=[IsAuthenticated]
-    
-    pagination_class = StandardResultsSetPagination
+    permission_classes=[SuperuserPermission]
 
     def get(self, request, *args, **kwargs):
         """Handle GET requests and return response."""
         queryset = DepartmentModel.objects.all()
-        paginator = self.pagination_class()
-        page = paginator.paginate_queryset(queryset, request)
-        serializer = DepartmentSerializer(page, many=True)
-        response_data = {
-            "message": "Departments fetched successfully.",
-            "data": serializer.data,
-            "page_size": paginator.page_size,
-            "page_number": paginator.page.number,
-            "total_pages": paginator.page.paginator.num_pages
-        }
-        return paginator.get_paginated_response(response_data)
+        serializer = DepartmentSerializer(queryset, many=True)
+        return Response({
+            "messege":"Departments fetched successfully",
+            "data": serializer.data
+            },
+            status= status.HTTP_200_OK
+        )
         
     def post(self, request):
         """Handle POST requests and save the request data."""
@@ -62,7 +48,7 @@ class DepartmentGetAPI(APIView):
 
 class DepartmentGetDetailAPI(APIView):
     """Department Detail API View."""
-    permission_classes=[IsAuthenticated]
+    permission_classes=[SuperuserPermission]
     def get(self, request, id):
         """Retrieve a specific department by ID."""
         try:
@@ -85,3 +71,14 @@ class DepartmentGetDetailAPI(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        """Handle DELETE requests and delete data from department model."""
+        
+        try:
+            queryset = DepartmentModel.objects.get(pk=id)
+        except:
+            return Response({"error":"queryset not found"}, status= status.HTTP_400_BAD_REQUEST)
+        
+        queryset.delete()
+        return Response({"message":"Employee deleted successfully"}, status=status.HTTP_204_NO_CONTENT)

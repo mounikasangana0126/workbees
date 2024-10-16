@@ -1,6 +1,9 @@
-from rest_framework import permissions
-from rest_framework.authentication import BasicAuthentication
 
-class IsAdminOrReadOnly(permissions.BasePermission):
-    def has_object_permission(self,request,views,obj):
-        return str(obj.employee_id)==str(request.user)
+from rest_framework.permissions import BasePermission
+
+class SuperuserPermission(BasePermission):
+    """Permission class allowing access to superuser users."""
+
+    def has_permission(self, request, view):
+        """Check if the user is authenticated and is a superuser."""
+        return request.user.is_authenticated and request.user.is_admin
