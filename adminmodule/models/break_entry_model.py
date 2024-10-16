@@ -4,6 +4,7 @@ from django.utils import timezone
 from adminmodule.models.time_entry_model import TimeEntry
 
 class BreakEntry(models.Model):
+    """Breakentry model"""
     time_entry = models.ForeignKey(TimeEntry, on_delete=models.CASCADE, related_name='breaks')
     break_start = models.DateTimeField()
     break_end = models.DateTimeField(null=True, blank=True) 
