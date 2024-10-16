@@ -1,7 +1,7 @@
 from django.db import models
 from adminmodule.models.employee_model import Employees
-
-class Leave(models.Model):
+from utils.helper.timestamp_model import TimeStampedModel
+class Leave(TimeStampedModel):
     LEAVE_TYPE_CHOICES = (
         ('SICK', 'Sick Leave'),
         ('VACATION', 'Vacation'),
@@ -20,7 +20,7 @@ class Leave(models.Model):
     leave_type = models.CharField(max_length=20, choices=LEAVE_TYPE_CHOICES)
     start_date = models.DateField()
     end_date = models.DateField()
-    reason = models.TextField(blank=True, null=True) 
+    reason = models.TextField() 
     status = models.CharField(
         max_length=10,
         choices=(

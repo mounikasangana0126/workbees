@@ -4,5 +4,7 @@ django-cors-headers
 Pillow
 graphviz
 pydotplus
+djangorestframework-simplejwt
+django-import-export
 
 
