@@ -10,6 +10,7 @@ from adminmodule.models.employee_model import Employees
 from adminmodule.models.shift_timings_model import WorkShiftsModel
 from adminmodule.models.leave_model import Leave
 from import_export.admin import ImportExportModelAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 @admin.register(DepartmentModel)
 class DepartmentModelAdmin(ImportExportModelAdmin):
