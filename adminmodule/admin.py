@@ -9,9 +9,16 @@ from adminmodule.models.break_entry_model import BreakEntry
 from adminmodule.models.employee_model import Employees
 from adminmodule.models.shift_timings_model import WorkShiftsModel
 from adminmodule.models.leave_model import Leave
+from adminmodule.models.department_head_model import DepartmentHeadModel
 from import_export.admin import ImportExportModelAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
+@admin.register(DepartmentHeadModel)
+class DepartmentHeadModelAdmin(ImportExportModelAdmin):
+    """ departmentHeadModelAdmin."""
+    list_display = ["id", "department","reporting_head"]
+    list_filter = ["id", "department","reporting_head"]
+    date_hierarchy = "created_at"
 @admin.register(DepartmentModel)
 class DepartmentModelAdmin(ImportExportModelAdmin):
     """DepartmentModelAdmin."""
