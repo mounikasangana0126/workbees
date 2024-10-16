@@ -1,21 +1,26 @@
 from django.db import models
 from adminmodule.models.employee_model import Employees
-
-class Leave(models.Model):
+from utils.helper.timestamp_model import TimeStampedModel
+class Leave(TimeStampedModel):
     LEAVE_TYPE_CHOICES = (
         ('SICK', 'Sick Leave'),
         ('VACATION', 'Vacation'),
         ('CASUAL', 'Casual Leave'),
-        ('MATERNITY', 'Maternity Leave'),
-        ('PATERNITY', 'Paternity Leave'),
+        ('MARRIAGE', 'Marriage Leave'),
+        ('UNPAID', 'Unpaid Leave'),
         ('OTHER', 'Other Leave'),
+    )
+    LEAVE_SHIFT_CHOICES=(
+        ('FULL_DAY', 'Full Day'),
+        ('FIRST_HALF', 'First Half'),
+        ('SECOND_HALF', 'Second Half'),   
     )
 
     employee = models.ForeignKey(Employees, on_delete=models.CASCADE, related_name='leave_records')
     leave_type = models.CharField(max_length=20, choices=LEAVE_TYPE_CHOICES)
     start_date = models.DateField()
     end_date = models.DateField()
-    reason = models.TextField(blank=True, null=True) 
+    reason = models.TextField() 
     status = models.CharField(
         max_length=10,
         choices=(
@@ -26,7 +31,8 @@ class Leave(models.Model):
         default='PENDING'
     )
     applied_on = models.DateTimeField(auto_now_add=True) 
-    approved_on = models.DateTimeField(null=True, blank=True)  
+    approved_on = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(Employees, on_delete=models.CASCADE, related_name='approved_leaves', null=True, blank=True)  
 
     def total_days(self):
         """Returns the total number of leave days."""

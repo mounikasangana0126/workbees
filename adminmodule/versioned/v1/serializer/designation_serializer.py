@@ -3,4 +3,4 @@ from adminmodule.models.designation_model import DesignationModel
 class DesignationSerializer(serializers.ModelSerializer):
     class Meta:
         model = DesignationModel
-        fields = '__all__'
+        fields = fields = ["id","designation_name","designation_is_active"]
