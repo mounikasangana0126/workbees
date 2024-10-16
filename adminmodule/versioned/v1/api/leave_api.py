@@ -28,14 +28,12 @@ class LeaveDetailAPI(APIView):
     def get(self,request,id):
         try:
             snippet=Leave.objects.get(id=id)
-            print(snippet)
         except:
             return Response({'message':'Leave not found'},status=status.HTTP_400_BAD_REQUEST)
         serializer=LeaveSerializer(snippet)
         emp_id=serializer.data['employee']
         snippet2=Employees.objects.get(id=emp_id)
         snippet2_data=EmployeeSerializer(snippet2)
-        print(snippet2_data)
         self.check_object_permissions(request,snippet2_data.data)
         return Response(serializer.data)
 

@@ -25,7 +25,7 @@ class DepartmentGetAPI(APIView):
     """Department Get API View."""
     permission_classes=[SuperuserPermission]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         """Handle GET requests and return response."""
         queryset = DepartmentModel.objects.all()
         serializer = DepartmentSerializer(queryset, many=True)

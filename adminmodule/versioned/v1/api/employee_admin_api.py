@@ -32,7 +32,6 @@ class EmployeeGetAdminDetailAPI(APIView):
     def get(self,request,id):
         """Handle GET request and return Response"""
         snippet=Employees.objects.get(id=id)
-        self.check_object_permissions(request,snippet)
         serializer=EmployeeSerializer(snippet)
         return Response(serializer.data)
 
@@ -41,7 +40,7 @@ class EmployeeGetAdminDetailAPI(APIView):
         """Handle Patch requests and update data in employees model."""
         
         try:
-            queryset = Employees.objects.get(pk=id)
+            queryset = Employees.objects.get(id=id)
         except:
             return Response({"error":"queryset not found"}, status= status.HTTP_400_BAD_REQUEST)
         
@@ -56,7 +55,7 @@ class EmployeeGetAdminDetailAPI(APIView):
         """Handle DELETE requests and delete data from employees model."""
         
         try:
-            queryset = Employees.objects.get(pk=id)
+            queryset = Employees.objects.get(id=id)
         except:
             return Response({"error":"queryset not found"}, status= status.HTTP_400_BAD_REQUEST)
         

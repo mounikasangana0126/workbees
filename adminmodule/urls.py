@@ -1,7 +1,6 @@
 
 from django.urls import path,include
 from adminmodule.versioned.v1.api.department_api import DepartmentGetAPI,DepartmentGetDetailAPI,ParentGetAPI
-from adminmodule.versioned.v1.api.user_model import UserGetAPI,UserPutAPI
 from adminmodule.versioned.v1.api.shift_timings_api import ShiftTimingGetAPI,ShiftTimingDetailGetAPI
 from adminmodule.versioned.v1.api.employee_api import EmployeeGetAPI
 from adminmodule.versioned.v1.api.employee_admin_api import EmployeeGetAdminAPI, EmployeeGetAdminDetailAPI

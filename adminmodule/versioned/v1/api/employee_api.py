@@ -12,7 +12,7 @@ class EmployeeGetAPI(APIView):
     def get(self,request):
         """Handle GET request and return Response"""
         snippet=Employees.objects.filter(user=request.user)
-        serializer=EmployeeSerializer(snippet)
+        serializer=EmployeeSerializer(snippet,many=True)
         return Response(serializer.data)
 
 
