@@ -7,4 +7,4 @@ from adminmodule.models.time_entry_model import TimeEntry
 from adminmodule.models.task_model import Task
 from adminmodule.models.break_entry_model import BreakEntry
 from adminmodule.models.employee_model import Employees
-from adminmodule.models.shift_timings_model import WorkShiftsModel,UserShiftTimingsModel
+from adminmodule.models.shift_timings_model import WorkShiftsModel

@@ -1,4 +1,6 @@
 env
-# Ignore Python cache files
 __pycache__/
 *.py[cod]
+migrations/
+db.sqlite3
+profile_pics/
