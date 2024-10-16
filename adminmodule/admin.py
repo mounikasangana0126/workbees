@@ -15,7 +15,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 @admin.register(DepartmentModel)
 class DepartmentModelAdmin(ImportExportModelAdmin):
     """DepartmentModelAdmin."""
-    list_display = ["id", "dept_name", "parent", "dept_is_enabled"]
+    list_display = ["id", "dept_name", "dept_code","parent", "dept_is_enabled"]
     list_filter = ["id","dept_name"]
     date_hierarchy = "created_at"
     
@@ -28,20 +28,20 @@ class ParentModelAdmin(ImportExportModelAdmin):
 @admin.register(DesignationModel)
 class DesignationModelAdmin(ImportExportModelAdmin):
     """ DesignationModelAdmin. """
-    list_display = ["id", "designation_name", "designation_is_active"]
-    list_filter = ["id", "designation_name"]
+    list_display = ["id", "department","designation_name", "designation_is_active"]
+    list_filter = ["id", "designation_name", "department"]
     date_hierarchy = "created_at"
 @admin.register(TimeEntry)  
 class TimeEntryModelAdmin(ImportExportModelAdmin):
     """ TimeEntryModelAdmin.."""
-    list_display = ["id", "user", "clock_in","clock_out", "is_completed"]
-    list_filter = ["id", "user","clock_in"]
+    list_display = ["id", "employee", "clock_in","clock_out", "is_completed"]
+    list_filter = ["id", "employee","clock_in"]
     date_hierarchy = "created_at"
 @admin.register(Task)  
 class TaskModelAdmin(ImportExportModelAdmin):
     """ TaskModelAdmin.."""
-    list_display = ["id", "time_entry", "description","start_time"]
-    list_filter = ["id", "start_time"]
+    list_display = ["id","title", "department", "description","start_date"]
+    list_filter = ["id", "priority","start_date"]
     date_hierarchy = "created_at"
 @admin.register(BreakEntry)   
 class BreakEntryModelAdmin(ImportExportModelAdmin):
@@ -52,8 +52,8 @@ class BreakEntryModelAdmin(ImportExportModelAdmin):
 @admin.register(Employees)  
 class EmployeesModelAdmin(ImportExportModelAdmin):
     """  EmployeesModelAdmin.. """
-    list_display = ["id", "employee_id", "user","department", "designation"]
-    list_filter = ["id", "user","department"]
+    list_display = ["id", "employee_id", "user", "designation"]
+    list_filter = ["id", "user"]
     date_hierarchy = "created_at"
 @admin.register(WorkShiftsModel) 
 class WorkShiftModelAdmin(ImportExportModelAdmin):
