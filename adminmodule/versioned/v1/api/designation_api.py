@@ -46,7 +46,7 @@ class DesignationGetDetailAPI(APIView):
         """Handle PATCH requests and update the data in designation models"""
         
         try:
-            queryset = DesignationModel.objects.get(pk=id)
+            queryset = DesignationModel.objects.get(id=id)
         except:
             return Response({"error":"queryset not found"}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -62,7 +62,7 @@ class DesignationGetDetailAPI(APIView):
         """Handle DELETE requests and delete data from designation model."""
         
         try:
-            queryset = DesignationModel.objects.get(pk=id)
+            queryset = DesignationModel.objects.get(id=id)
         except:
             return Response({"error":"queryset not found"}, status= status.HTTP_400_BAD_REQUEST)
         

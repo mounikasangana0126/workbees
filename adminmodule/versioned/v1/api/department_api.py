@@ -61,7 +61,7 @@ class DepartmentGetDetailAPI(APIView):
     def patch(self, request, id):
         """Handle PATCH requests and update the department."""
         try:
-            queryset = DepartmentModel.objects.get(pk=id)
+            queryset = DepartmentModel.objects.get(id=id)
         except DepartmentModel.DoesNotExist:
             return Response({'error': 'Department not found'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -76,7 +76,7 @@ class DepartmentGetDetailAPI(APIView):
         """Handle DELETE requests and delete data from department model."""
         
         try:
-            queryset = DepartmentModel.objects.get(pk=id)
+            queryset = DepartmentModel.objects.get(id=id)
         except:
             return Response({"error":"queryset not found"}, status= status.HTTP_400_BAD_REQUEST)
         

@@ -5,7 +5,7 @@ from rest_framework import status
 from adminmodule.models.employee_model import Employees
 from adminmodule.versioned.v1.serializer.employee_serializer import EmployeeSerializer
 from utils.helper.permission import SuperuserPermission
-class EmployeeGetAPI(APIView):
+class EmployeeGetAdminAPI(APIView):
     permission_classes=[SuperuserPermission]
     def get(self,request):
         """Handle GET request and return Response"""
@@ -26,7 +26,7 @@ class EmployeeGetAPI(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
-class EmployeePutAPI(APIView):
+class EmployeeGetAdminDetailAPI(APIView):
     permission_classes=[SuperuserPermission]
 
     def get(self,request,id):

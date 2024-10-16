@@ -14,7 +14,6 @@ class BreakContinueAPI(APIView):
         serializer=BreakEntrySerializer(snippet,many=True)
         return Response(serializer.data)
     def post(self,request):
-        time_entry=request.data.get('time_entry')
         serializer=BreakEntrySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -32,13 +31,13 @@ class BreakContinueDetailAPI(APIView):
         serializer=BreakEntrySerializer(snippet)
         return Response(serializer.data)
 
-    def put(self, request):
+    def put(self, request,id):
         try:
             time_entry = request.data.get('time_entry')
             if not time_entry:
                 return Response({"error": "time_entry not provided"}, status=status.HTTP_400_BAD_REQUEST)
 
-            queryset = BreakEntry.objects.get(pk=request.data.get('id'))
+            queryset = BreakEntry.objects.get(id=id)
         except BreakEntry.DoesNotExist:
             return Response({"error": "BreakEntry not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
@@ -54,7 +53,7 @@ class BreakContinueDetailAPI(APIView):
 
     def delete(self, request, id):
         try:
-            queryset = BreakEntry.objects.get(pk=id)
+            queryset = BreakEntry.objects.get(id=id)
         except BreakEntry.DoesNotExist:
             return Response({"error": "BreakEntry not found"}, status=status.HTTP_404_NOT_FOUND)
         queryset.delete()
