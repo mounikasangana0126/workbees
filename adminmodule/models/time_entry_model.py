@@ -8,7 +8,7 @@ class TimeEntry(TimeStampedModel):
         ('WFO', 'Work From Office'),
         ('WFH', 'Work From Home'),
     ]
-    employee = models.ForeignKey(Employees, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employees, on_delete=models.CASCADE, related_name="timeentry")
     date= models.DateField(default=timezone.now)
     clock_in = models.DateTimeField()
     clock_out = models.DateTimeField(null=True, blank=True) 

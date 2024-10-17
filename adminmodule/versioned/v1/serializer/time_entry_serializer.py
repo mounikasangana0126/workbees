@@ -8,3 +8,5 @@ class TimeEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeEntry
         fields = ['user','clock_in','clock_out','is_completed','work_mode']
+
+
