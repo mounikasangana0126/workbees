@@ -5,7 +5,12 @@ from adminmodule.models.employee_model import Employees
 
 
 class LeaveSerializer(serializers.ModelSerializer):
-    employees=serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model=Leave
-        fields=['start_date', 'end_date', 'leave_shift','leave_type','reason','status','total_days','employees']
+        fields=['id','start_date', 'end_date', 'leave_type','reason','status','total_days']
+        
+class Employee(serializers.ModelSerializer):
+    leave_records = LeaveSerializer(many = True)
+    class Meta:
+        model = Employees
+        fields = ['id', 'employee_id','designation', 'leave_records']

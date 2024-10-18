@@ -7,7 +7,7 @@ from adminmodule.versioned.v1.serializer.shift_timings_serializer import ShiftTi
 
 class EmployeeSerializer(serializers.ModelSerializer):
     user_data=UserSerializer(source='user',read_only=True)
-    department_data=DepartmentSerializer(source='department',read_only=True)
+    department_data=DepartmentSerializer(source='designation.department',read_only=True)
     designation_data=DesignationSerializer(source='designation',read_only=True)
     shift_timings_data=ShiftTimeSerializer(source='employee_shift',read_only=True)
     

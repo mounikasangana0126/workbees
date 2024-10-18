@@ -17,7 +17,7 @@ urlpatterns = [
 
 #  User apis
    path('employee/',EmployeeGetAPI.as_view()),
-   path('checkin_checkout/',CheckInCheckOutDetailsAPI.as_view()),
+   path('checkin_checkout/',CheckInCheckOutAPI.as_view()),
    path('checkin_checkout/<uuid:id>/',CheckInCheckOutDetailsAPI.as_view()),
    path('leave/',LeaveAPI.as_view()),
    path('leave/<uuid:id>/',LeaveDetailAPI.as_view()),
