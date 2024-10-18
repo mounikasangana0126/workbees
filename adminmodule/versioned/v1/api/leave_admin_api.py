@@ -13,7 +13,7 @@ class LeaveAdminAPI(APIView):
     
     # GET method to retrieve all leave records
     def get(self, request):
-        query = Leave.objects.all()  # Retrieve all leave entries
+        query = Leave.objects.filter(status = "PENDING")  # Retrieve all leave entries
         if not query.exists():  # Check if no leave records exist
             return Response({
                 'message': 'No leave records found',
