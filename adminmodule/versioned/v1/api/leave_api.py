@@ -6,11 +6,11 @@ from adminmodule.versioned.v1.serializer.leave_serializer import LeaveSerializer
 from adminmodule.models.employee_model import Employees
 from rest_framework.permissions import IsAuthenticated
 class LeaveAPI(APIView):
+    """Leave API"""
     permission_classes=[IsAuthenticated]
     def get(self,request):
         """ Handle get request to fetch all leave records of an employee.."""
         query=Employees.objects.filter(user__name=request.user)
-        print(query)
         serializer=Employee(query,many=True)
         return Response({
             'message':'Leave records of an employee fetched successfully',

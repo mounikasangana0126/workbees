@@ -7,6 +7,7 @@ from django.utils import timezone
 from rest_framework.permissions import IsAuthenticated
 
 class BreakContinueAPI(APIView):
+    """BreakContinue API"""
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
