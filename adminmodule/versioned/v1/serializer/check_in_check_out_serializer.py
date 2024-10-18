@@ -1,32 +1,15 @@
-from adminmodule.models.break_entry_model import BreakEntry
+from adminmodule.versioned.v1.serializer.time_entry_serializer import TimeEntrySerializer
+from adminmodule.versioned.v1.serializer.breakentry_serializer import BreakEntrySerializer
 from rest_framework import serializers
 from adminmodule.models.time_entry_model import TimeEntry
-from adminmodule.models.employee_model import Employees
 from adminmodule.models.user_model import User
-from adminmodule.models.designation_model import DesignationModel
+from adminmodule.versioned.v1.serializer.designation_serializer import DesignationSerializer
 
-class DesiganetionCheckInCheckOut(serializers.ModelSerializer):
-    class Meta:
-        model=DesignationModel
-        fields=['designation_name']
-class UserCheckInChecout(serializers.ModelSerializer):
-    class Meta:
-        model=User
-        fields=['name']
-class BreakEntryCheckInCheckOut(serializers.ModelSerializer):
-    class Meta:
-        model = BreakEntry
-        fields = ['break_start','break_end']
-class TimeEntryCheckInCheckOut(serializers.ModelSerializer):
-    breaks = BreakEntryCheckInCheckOut(many =True)
-    class Meta:
-        model= TimeEntry
-        fields=['id','clock_in','clock_out','is_completed','work_mode','date', 'breaks']
         
-class EmployeeCheckInCheckOut(serializers.ModelSerializer):
-    timeentry = TimeEntryCheckInCheckOut(many = True)
-    user=UserCheckInChecout()
-    designation=DesiganetionCheckInCheckOut()
+class CheckinCheckoutSerializer(serializers.ModelSerializer):
+    breakentry = BreakEntrySerializer(many=True,source='breaks', read_only=True)
+    name=serializers.CharField(source='employee.user.name', default=None, read_only=True)
+
     class Meta:
-        model=Employees
-        fields=['user','employee_id','profile_pic','designation', 'timeentry']
+        model=TimeEntry
+        fields=['id','name','employee','date', 'clock_in','clock_out','is_completed','work_mode','breakentry']

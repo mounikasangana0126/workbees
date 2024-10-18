@@ -9,19 +9,19 @@ class Employees(TimeStampedModel):
         ('ACTIVE', 'Active'),
         ('INACTIVE', 'Inactive'),
     )
-    user= models.OneToOneField(User, on_delete=models.CASCADE)
+    user= models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee')
     profile_pic = models.ImageField(upload_to='profile_pics', null=True, blank=True)
     designation =models.ForeignKey(
         DesignationModel, 
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True, 
-        related_name='employees'
+        related_name='employee'
     )
     date_of_birth = models.DateField(null=True, blank=True)
     employee_id = models.CharField(max_length=50, unique=True)
     emp_is_active = models.BooleanField(default=True,null=True)
-    employee_shift=models.ForeignKey(WorkShiftsModel, on_delete=models.SET_NULL, null=True, blank=True, related_name='employees')
+    employee_shift=models.ForeignKey(WorkShiftsModel, on_delete=models.SET_NULL, null=True, blank=True, related_name='employee')
     auto_clockout = models.CharField(max_length=10, choices=STATUS_CHOICES, default='INACTIVE')
     city = models.CharField(max_length=255, blank=True, null=True)
     joining_date = models.DateField(null=True, blank=True)

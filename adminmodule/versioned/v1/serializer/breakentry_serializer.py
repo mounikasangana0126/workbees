@@ -6,6 +6,6 @@ class BreakEntrySerializer(serializers.ModelSerializer):
     """Break entry serializer"""
     class Meta:
         model = BreakEntry
-        fields = '__all__'
+        fields = ['id','time_entry','break_start','break_end']
         
         

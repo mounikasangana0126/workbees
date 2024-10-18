@@ -1,6 +1,7 @@
 from django.db import models
 from adminmodule.models.employee_model import Employees
 from django.utils import timezone
+from datetime import datetime
 from utils.helper.timestamp_model import TimeStampedModel
 
 class TimeEntry(TimeStampedModel):
@@ -10,8 +11,8 @@ class TimeEntry(TimeStampedModel):
     ]
     employee = models.ForeignKey(Employees, on_delete=models.CASCADE, related_name="timeentry")
     date= models.DateField(default=timezone.now)
-    clock_in = models.DateTimeField()
-    clock_out = models.DateTimeField(null=True, blank=True) 
+    clock_in = models.TimeField()
+    clock_out = models.TimeField(null=True, blank=True) 
     work_mode=models.CharField(choices=work_mode_choices,null=True,blank=True,max_length=50,default='WFH')
     is_completed = models.BooleanField(default=False) 
 
@@ -21,8 +22,9 @@ class TimeEntry(TimeStampedModel):
         else: 
             work_time_hours=9
         if self.clock_in and not self.clock_out:
-            clock_out_hours = work_time_hours
-            self.clock_out= self.clock_in + timezone.timedelta(hours=clock_out_hours)
+            clock_in_datetime = datetime.combine(self.date, self.clock_in)
+            clock_out_datetime = clock_in_datetime + timezone.timedelta(hours=work_time_hours)
+            self.clock_out = clock_out_datetime.time() 
         super().save(*args, **kwargs)
 
     def __str__(self):
