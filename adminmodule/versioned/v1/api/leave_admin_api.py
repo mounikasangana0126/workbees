@@ -13,11 +13,13 @@ class LeaveAdminAPI(APIView):
     
     # GET method to retrieve all leave records
     def get(self, request):
-        query = Leave.objects.filter(status = "PENDING")  # Retrieve all leave entries
+        """Retrieve all pending leave records."""
+        query = Leave.objects.filter(status="PENDING")  # Retrieve all leave entries with status 'PENDING'
+        
         if not query.exists():  # Check if no leave records exist
             return Response({
                 'message': 'No leave records found',
-                'data': [],
+                'data': [],  # Return an empty list if no records found
                 'status': status.HTTP_404_NOT_FOUND
             }, status=status.HTTP_404_NOT_FOUND)
 
@@ -30,11 +32,12 @@ class LeaveAdminAPI(APIView):
     
     # POST method to create a new leave record
     def post(self, request, *args, **kwargs):
+        """Create a new leave record for the authenticated employee."""
         try:
             # Find the employee record linked to the current logged-in user
-            employee_id = Employees.objects.filter(employee__user=request.user).first()
-            if not employee_id:
-                raise Exception("Employee not found")
+            employee = Employees.objects.filter(employee__user=request.user).first()
+            if not employee:
+                raise Exception("Employee not found")  # Raise an exception if no employee is found
         except Exception as e:
             return Response({
                 'message': str(e),
@@ -44,7 +47,7 @@ class LeaveAdminAPI(APIView):
         
         serializer = LeaveSerializer(data=request.data)  # Initialize serializer with request data
         if serializer.is_valid():  # Check if data is valid
-            serializer.save(employee=employee_id)  # Save the leave record linked to the employee
+            serializer.save(employee=employee)  # Save the leave record linked to the employee
             return Response({
                 'message': 'Leave record created successfully',
                 'data': serializer.data,
@@ -53,7 +56,7 @@ class LeaveAdminAPI(APIView):
         
         return Response({
             'message': 'Invalid data provided',
-            'data': serializer.errors,
+            'data': serializer.errors,  # Include serializer errors in the response
             'status': status.HTTP_400_BAD_REQUEST
         }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -63,6 +66,7 @@ class LeaveAdminDetailAPI(APIView):
 
     # GET method to retrieve a specific leave record by its ID
     def get(self, request, id):
+        """Retrieve a specific leave record by its ID."""
         try:
             snippet = Leave.objects.get(id=id)  # Find the leave record by ID
         except Leave.DoesNotExist:
@@ -81,6 +85,7 @@ class LeaveAdminDetailAPI(APIView):
 
     # PUT method to update a specific leave record
     def put(self, request, id):
+        """Update a specific leave record."""
         try:
             snippet = Leave.objects.get(id=id)  # Find the leave record by ID
         except Leave.DoesNotExist:
@@ -102,6 +107,6 @@ class LeaveAdminDetailAPI(APIView):
         
         return Response({
             'message': 'Invalid data provided',
-            'data': serializer.errors,
+            'data': serializer.errors,  # Include serializer errors in the response
             'status': status.HTTP_400_BAD_REQUEST
         }, status=status.HTTP_400_BAD_REQUEST)

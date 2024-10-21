@@ -7,6 +7,7 @@ from utils.helper.timestamp_model import TimeStampedModel
 
 class BreakEntry(TimeStampedModel):
     """Breakentry model"""
+    
     time_entry = models.ForeignKey(TimeEntry, on_delete=models.CASCADE, related_name='breaks')
     break_start = models.DateTimeField()
     break_end = models.DateTimeField(null=True, blank=True) 
@@ -22,9 +23,11 @@ class BreakEntry(TimeStampedModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
+        """ return string in response of the object."""
         return f"Break - {self.break_start} to {self.break_end}"
 
     def duration_in_seconds(self):
+        """ break time duration."""
         if not self.break_end:
             return 0
         return (self.break_end - self.break_start).total_seconds()

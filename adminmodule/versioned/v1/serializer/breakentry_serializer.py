@@ -5,6 +5,11 @@ from adminmodule.models.time_entry_model import TimeEntry
 class BreakEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = BreakEntry
-        fields = '__all__'
+        fields = ['id','break_start','break_end','time_entry', 'duration_in_seconds']
+
+# class BreakContinueSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = BreakEntry
+#         fields = ['id','']
         
         

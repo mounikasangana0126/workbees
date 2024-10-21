@@ -3,7 +3,10 @@ from adminmodule.models.employee_model import Employees
 from django.utils import timezone
 from utils.helper.timestamp_model import TimeStampedModel
 
+
 class TimeEntry(TimeStampedModel):
+    """ Clock_in and Clock_out Model"""
+    
     work_mode_choices = [
         ('WFO', 'Work From Office'),
         ('WFH', 'Work From Home'),
@@ -16,6 +19,8 @@ class TimeEntry(TimeStampedModel):
     is_completed = models.BooleanField(default=False) 
 
     def save(self, *args, **kwargs):
+        """ Save method."""
+        
         if self.employee.employee_shift and self.employee.employee_shift.work_time:
             work_time_hours= self.employee.employee_shift.work_time
         else: 
@@ -26,14 +31,17 @@ class TimeEntry(TimeStampedModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
+        """ return string in the response of the object."""
         return f"{self.employee.user.username} - {self.clock_in} to {self.clock_out}"
 
     def total_work_time(self):
+        """ Calculate break time """
+        
         if not self.clock_out:
             return None
         
         work_duration = (self.clock_out - self.clock_in).total_seconds()
-        breaks_duration = sum([break_entry.duration_in_seconds() for break_entry in self.breakentry_set.all()])
+        breaks_duration = sum([break_entry.duration_in_seconds() for break_entry in self.breaks.all()])
         total_work_seconds = work_duration - breaks_duration
         
         return total_work_seconds / 3600 
@@ -43,8 +51,6 @@ class TimeEntry(TimeStampedModel):
         if self.clock_out:
             expected_duration = self.employee.employee_shift.work_time  
             actual_duration = self.total_work_time() or 0  
-            
-
             remaining_hours = expected_duration - actual_duration
             return max(remaining_hours, 0)  
         return None  

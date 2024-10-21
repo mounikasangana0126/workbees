@@ -5,126 +5,223 @@ from adminmodule.models.user_model import User
 from adminmodule.models.time_entry_model import TimeEntry
 from adminmodule.models.employee_model import Employees
 from adminmodule.versioned.v1.serializer.time_entry_serializer import TimeEntrySerializer
-from adminmodule.versioned.v1.serializer.check_in_check_out_serializer import EmployeeCheckInCheckOut
 from django.utils import timezone
 from rest_framework.permissions import IsAuthenticated
 
-class CheckInCheckOutAPI(APIView):
+class TimeEntryCheckInAPI(APIView):
+    """ List of all time entries, and post a new time entry api."""
+    
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        """Handle GET request and return all employees' time entries and break entries."""
-        
-        # Fetch all employee records
-        data = Employees.objects.all()
+        """ Handle Get request and return response.."""
+        user = User.objects.get(id = request.user.id)
+        if not user:
+            return Response(
+                {
+                    'message':'user not found',
+                    'data':[]
+                },
+                status= status.HTTP_400_BAD_REQUEST
+            )
+        employee = Employees.objects.filter(user = user).first()
+        if not employee:
+            return Response(
+                {
+                    'message':'Employee is not created for this user..',
+                    'data':[]
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        timeentries = TimeEntry.objects.filter(employee = employee)
+        if not timeentries.exists():
+            return Response(
+                {
+                    'message':'No time entry is created by these employee',
+                    'data':[]
+                },
+                status=status.HTTP_204_NO_CONTENT
+            )
+        serializer = TimeEntrySerializer(timeentries, many= True)
+        return Response(
+            {
+                'message':'Time entries of an employee fetched successfully',
+                'data':serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
 
-        # Check if there are no employees with time or break entries
-        if not data.exists():
-            return Response({
-                'message': 'No employees with time entries or break entries found',
-                'data': []  # Send empty data in response for no records
-            }, status=status.HTTP_204_NO_CONTENT)
-        
-        # Serialize employee data with related time entries and break entries
-        serializer = EmployeeCheckInCheckOut(data, many=True)
-        return Response({
-            'message': 'Fetched all employees\' time entries and break entries',
-            'data': serializer.data  # Return the serialized data
-        }, status=status.HTTP_200_OK)
-
+    
     def post(self, request):
-        """Handle POST request to add a new time entry for an employee."""
+        """ Handle Post request for create a new Time entry and return Response"""
         
-        # Initialize serializer with incoming data
-        serializer = TimeEntrySerializer(data=request.data)
-        
-        # Fetch the employee record using the provided employee ID
-        employee = Employees.objects.get(id=request.data.get('employee'))
-        
-        # Validate serializer data and save new time entry
-        if serializer.is_valid():
-            serializer.save(employee=employee)
-            return Response({
-                'message': 'Clock-in added successfully.',
-                'data': serializer.data  # Return the newly created entry
-            }, status=status.HTTP_201_CREATED)
-        
-        # If data is invalid, return validation errors
-        return Response({
-            'message': 'Invalid data',
-            'data': serializer.errors  # Provide details about the validation errors
-        }, status=status.HTTP_400_BAD_REQUEST)
-
-
-class CheckInCheckOutDetailsAPI(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, id):
-        """Handle GET request to retrieve all time entries of a specific employee."""
+        timee = timezone.now()
+        timee_date = timee.date()
+        print(timee)
+        user = User.objects.get(id = request.user.id)
+        if not user:
+            return Response(
+                {
+                    'message':'user not found',
+                    'data':[]
+                },
+                status= status.HTTP_400_BAD_REQUEST
+            )
+        employee = Employees.objects.filter(user = user).first()
+        if not employee:
+            return Response(
+                {
+                    'message':'Employee is not created for this user..',
+                    'data':[]
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
         
         try:
-            # Filter for employee's time entry details using their ID
-            queryset = Employees.objects.filter(id=id)
-
-            # Check if employee record is found
-            if not queryset.exists():
-                return Response({
-                    'message': 'Employee time entry details not found',
-                    'data': []  # Send empty data in response if not found
-                }, status=status.HTTP_404_NOT_FOUND)
-
-        except Employees.DoesNotExist:
-            # Handle the case where the employee does not exist
-            return Response({
-                'message': 'Employee not found',
-                'data': []  # Send empty data if the employee doesn't exist
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Serialize the filtered employee's time entry data
-        serializer = EmployeeCheckInCheckOut(queryset, many=True)
-        return Response({
-            'message': 'Time entries of the employee retrieved successfully',
-            'data': serializer.data  # Return the serialized data
-        }, status=status.HTTP_200_OK)
-
-    def put(self, request, id):
-        """Handle PUT request to update time entry details by time entry ID."""
-        
-        try:
-            # Filter for the time entry by its ID
-            queryset = TimeEntry.objects.filter(id=id)
-
-            # Check if the time entry exists
-            if not queryset.exists():
-                return Response({
-                    'message': 'Time entry not found for the given ID',
-                    'data': []  # Return empty data if not found
-                }, status=status.HTTP_404_NOT_FOUND)
-            
-            # Fetch the user details from the request
-            user_id = request.user.id
-            user = User.objects.get(id=user_id)
-        
-        except User.DoesNotExist:
-            # Handle case where the user does not exist
-            return Response({
-                'message': 'User not found',
-                'data': []  # Send empty data in case of a missing user
-            }, status=status.HTTP_404_NOT_FOUND)
-        
-        # Initialize serializer with the existing time entry and new data
-        serializer = TimeEntrySerializer(instance=queryset.first(), data=request.data, partial=True)
-        
-        # Validate and save the updated data
+            timeentry = TimeEntry.objects.get(employee=employee, clock_in__date=timee_date)
+            if timeentry:
+                return Response(
+                {
+                    'message':'Clock_in has already created for this employee',
+                    'data':[]
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+                
+        except TimeEntry.DoesNotExist:
+            timeentry = None
+        data= request.data
+        data['employee']=employee.id
+        data['clock_in']=timee
+        data['date'] = timee_date 
+        serializer = TimeEntrySerializer(data = data, partial = True )
         if serializer.is_valid():
             serializer.save()
-            return Response({
-                'message': 'Time entry details updated successfully',
-                'data': serializer.data  # Return updated time entry details
-            }, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    'message':'Clock_in created for today',
+                    'data':serializer.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            {
+                'message':serializer.errors,
+                'data':[]
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
         
-        # Return validation errors if data is invalid
-        return Response({
-            'message': 'Invalid data',
-            'data': serializer.errors  # Provide details of the errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+class TimeEntryCheckOutAPI(APIView):
+    """ To save clock_out time..."""
+    
+    def post(self, request):
+        """ Handle Post request and save request data."""
+        employee = Employees.objects.get(user = request.user.id)
+        timee = timezone.now()
+        timee_date = timee.date()
+        try:
+            timeentry = TimeEntry.objects.get(employee = employee, clock_in__date = timee_date)
+        except TimeEntry.DoesNotExist():
+            return Response(
+                {
+                    'message':'You have not clock_in today.',
+                    'data':[] 
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        data = request.data
+        data['clock_in'] = timeentry.clock_in
+        data['clock_out'] = timee
+        data['is_completed'] = True
+        data['employee'] = employee.id
+        # breaks = BreakEntry.objects.filter(time_entry = timeentry)
+        serializer = TimeEntrySerializer(timeentry, data=data, partial =True)
+        # break_serializer = BreakEntrySerializer(breaks, many =True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    'message':' Clock_out time saved successfully..',
+                    'data':serializer.data
+                    # 'breaks':break_serializer.data
+                },
+                status=status.HTTP_202_ACCEPTED
+            )
+        return Response(
+            {
+                'message':serializer.errors,
+                'data':[]
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+        
+        
+        
+
+
+class TimeEntryCheckInCheckOutDetailsAPI(APIView):
+    """ To get or update time entry"""
+    
+    permission_classes = [IsAuthenticated]
+    def get(self, request, id):
+        """ Handle Get request and return Response.."""
+        try:
+            timeentry = TimeEntry.objects.get(id = id)
+        except TimeEntry.DoesNotExist:
+            return Response(
+                {
+                    'message':'Time Entry not found.',
+                    'data':[]
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer = TimeEntrySerializer(timeentry)
+        return Response(
+            {
+                'message':'Time entry or clock_in fetech successfully',
+                'data':serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
+
+    def put(self, request, id):
+        """ Handle put request and return response.."""
+        timee = timezone.now()
+        try:
+            timeentry = TimeEntry.objects.get(id = id)
+        except TimeEntry.DoesNotExist:
+            return Response(
+                {
+                    'message':'Time entry or clock_in not found..',
+                    'data':[]
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        user = User.objects.get(id = request.user.id)
+        print(request.user.id)
+        employee = Employees.objects.get(user = user)
+        data = request.data
+        data['clock_in'] = timeentry.clock_in
+        data['clock_out'] = timee
+        data['employee'] = employee.id
+        serializer = TimeEntrySerializer(timeentry, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    'message':'Clock_out time saved',
+                    'data':serializer.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        
+        return Response(
+            {
+                'message':serializer.errors,
+                'data':[]
+            },
+            status = status.HTTP_400_BAD_REQUEST
+        )
