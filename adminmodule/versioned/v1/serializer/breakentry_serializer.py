@@ -7,9 +7,6 @@ class BreakEntrySerializer(serializers.ModelSerializer):
         model = BreakEntry
         fields = ['id','break_start','break_end','time_entry', 'duration_in_seconds']
 
-# class BreakContinueSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = BreakEntry
-#         fields = ['id','']
+
         
         
