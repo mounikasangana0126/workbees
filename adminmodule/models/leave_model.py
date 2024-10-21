@@ -1,7 +1,10 @@
+"""Leave Model"""
+
 from django.db import models
 from adminmodule.models.employee_model import Employees
 from utils.helper.timestamp_model import TimeStampedModel
 class Leave(TimeStampedModel):
+    """Leave model"""
     LEAVE_TYPE_CHOICES = (
         ('SICK', 'Sick Leave'),
         ('VACATION', 'Vacation'),
@@ -39,6 +42,7 @@ class Leave(TimeStampedModel):
         return (self.end_date - self.start_date).days + 1 
 
     def __str__(self):
+        """Return String response of th object"""
         return f"{self.employee.user.username} - {self.leave_type} from {self.start_date} to {self.end_date}"
 
     class Meta:

@@ -1,3 +1,5 @@
+"""Employee profile api."""
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from adminmodule.models.user_model import User  
@@ -12,34 +14,56 @@ class EmployeeGetAPI(APIView):
 
     def get(self, request):
         """Handle GET request to fetch employee details."""
-        snippet = Employees.objects.filter(user=request.user)  
-        serializer = EmployeeSerializer(snippet, many=True) 
+        try:
+            snippet = Employees.objects.get(user=request.user)  
+        except:
+            return Response(
+                {
+                    "message": "No employee records found for this user",
+                    "data": []
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = EmployeeSerializer(snippet) 
         
-        return Response({
-            "message": "Employee details fetched successfully",
-            "data": serializer.data if serializer.data else []  
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "message": "Employee details fetched successfully",
+                "data": serializer.data if serializer.data else []  
+            }, 
+            status=status.HTTP_200_OK
+        )
 
     def put(self, request):
         """Handle PATCH request to update employee data."""
-        queryset = Employees.objects.filter(user=request.user) 
         
-        if not queryset.exists():  
-            return Response({
-                "message": "No employee records found for this user",
-                "data": []
-            }, status=status.HTTP_404_NOT_FOUND)
+        try:
+            queryset = Employees.objects.get(user=request.user) 
+        except queryset.exists():  
+            return Response(
+                {
+                    "message": "No employee records found for this user",
+                    "data": []
+                }, 
+                status=status.HTTP_404_NOT_FOUND
+            )
 
-        serializer = EmployeeSerializer(queryset, data=request.data, partial=True)  
+        serializer = EmployeeSerializer(instance=queryset, data=request.data, partial=True)  
         
         if serializer.is_valid():  
             serializer.save() 
-            return Response({
-                "message": "Employee details updated successfully",
-                "data": serializer.data  
-            }, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    "message": "Employee details updated successfully",
+                    "data": serializer.data  
+                },
+                status=status.HTTP_200_OK
+            )
         
-        return Response({
+        return Response(
+            {
             "message": "Invalid data provided",
             "errors": serializer.errors  
-        }, status=status.HTTP_400_BAD_REQUEST)
+            }, 
+        status=status.HTTP_400_BAD_REQUEST
+        )

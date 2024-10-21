@@ -1,3 +1,5 @@
+"""Parent and Department API."""
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from adminmodule.models.department_model import DepartmentModel, ParentModel
@@ -38,7 +40,10 @@ class DepartmentGetAPI(APIView):
         
     def post(self, request):
         """Handle POST requests and save the request data."""
-        serializer = DepartmentSerializer(data=request.data)
+        data=request.data
+        Parent=ParentModel.objects.get(parent_dept=data["parent"])
+        data["parent"]=Parent.id
+        serializer = DepartmentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(
@@ -58,7 +63,7 @@ class DepartmentGetDetailAPI(APIView):
         except DepartmentModel.DoesNotExist:
             return Response({"error": "Department not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    def patch(self, request, id):
+    def put(self, request, id):
         """Handle PATCH requests and update the department."""
         try:
             queryset = DepartmentModel.objects.get(id=id)
