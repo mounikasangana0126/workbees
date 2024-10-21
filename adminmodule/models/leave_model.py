@@ -33,6 +33,7 @@ class Leave(TimeStampedModel):
         ),
         default='PENDING'
     )
+    leave_shift = models.CharField(max_length=20, choices=LEAVE_SHIFT_CHOICES, default='FULL_DAY')
     applied_on = models.DateTimeField(auto_now_add=True) 
     approved_on = models.DateTimeField(null=True, blank=True)
     approved_by = models.ForeignKey(Employees, on_delete=models.CASCADE, related_name='approved_leaves', null=True, blank=True)  

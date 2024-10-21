@@ -16,18 +16,20 @@ class EmployeeSerializer(serializers.ModelSerializer):
     department_data=DepartmentSerializer(source='designation.department',read_only=True)
     designation_data=DesignationSerializer(source='designation',read_only=True)
     shift_timings_data=ShiftTimeSerializer(source='employee_shift',read_only=True)
-    # reporting_head=serializers.SerializerMethodField()
+    reporting_head=serializers.SerializerMethodField()
     
     class Meta:
         """Meta information for Employee"""
         model=Employees
-        fields=['id','employee_id','date_of_birth','profile_pic','emp_is_active','auto_clockout','city','address','joining_date','user_data','employee_shift','designation','department_data','designation_data','shift_timings_data']
+        fields=['id','employee_id','date_of_birth','profile_pic','emp_is_active','auto_clockout','city','address','joining_date','user_data','employee_shift','designation','department_data','designation_data','shift_timings_data','reporting_head']
     
-    # def get_reporting_head(self, obj):
-    #     department=DesignationModel.objects.filter(id=obj.designation).first()
+    def get_reporting_head(self, obj):
+        if obj.designation:
+            department=DesignationModel.objects.filter(id=obj.designation.id).first()
 
-    #     if department:
-    #         reporting_head=DepartmentHeadModel.objects.filter(department=department.id).first()
-    #         return reporting_head if reporting_head else None
-    #     return None
+            if department:
+                reporting_head=DepartmentHeadModel.objects.filter(department=department.id).first()
+                return reporting_head if reporting_head else None
+            return None
+        return None
             
