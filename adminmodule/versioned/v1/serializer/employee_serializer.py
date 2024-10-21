@@ -8,12 +8,13 @@ from adminmodule.versioned.v1.serializer.designation_serializer import Designati
 from adminmodule.versioned.v1.serializer.shift_timings_serializer import ShiftTimeSerializer
 from adminmodule.models.department_head_model import DepartmentHeadModel
 from adminmodule.models.designation_model import DesignationModel
+from adminmodule.models.user_model import User
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
     """Employee serializer for employee profile"""
     
-    user_data=UserSerializer(source='user',read_only=True)
+    user_data=UserSerializer(source='user')
     department_data=DepartmentSerializer(source='designation.department',read_only=True)
     designation_data=DesignationSerializer(source='designation',read_only=True)
     shift_timings_data=ShiftTimeSerializer(source='employee_shift',read_only=True)
@@ -33,3 +34,10 @@ class EmployeeSerializer(serializers.ModelSerializer):
                 return department_head.reporting_head.user.name
 
         return None
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user_serializer=UserSerializer(data=user_data)
+        if user_serializer.is_valid(raise_exception=True):
+            user=user_serializer.save()
+        employee=Employees.objects.create(user=user,**validated_data)
+        return employee

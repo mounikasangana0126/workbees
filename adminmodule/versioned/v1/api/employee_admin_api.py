@@ -29,15 +29,12 @@ class EmployeeGetAdminAPI(APIView):
     def post(self, request):
         """Handle POST request to create a new employee."""
         data=request.data
-        user=User.objects.get(username=data["username"])
-        print(user.id)
-        designation=DesignationModel.objects.get(designation_name=data["designation_name"])
-        print(designation.id)
-        shift_name=WorkShiftsModel.objects.get(shift_name=data["shift_name"])
-        print(shift_name.id)
-        data["user"]=user
-        data["designation"]=designation.id
-        data["employee_shift"]=shift_name.id
+        # user=User.objects.get(username=data["username"])
+        # designation=DesignationModel.objects.get(designation_name=data["designation_name"])
+        # shift_name=WorkShiftsModel.objects.get(shift_name=data["shift_name"])
+        # data["user"]=user
+        # data["designation"]=designation.id
+        # data["employee_shift"]=shift_name.id
         serializer = EmployeeSerializer(data=data) 
         if serializer.is_valid():  
             serializer.save() 
