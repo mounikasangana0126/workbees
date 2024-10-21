@@ -1,3 +1,5 @@
+"""Employee Model"""
+
 from django.db import models
 from adminmodule.models.user_model import User
 from adminmodule.models.designation_model import DesignationModel
@@ -5,6 +7,8 @@ from utils.helper.timestamp_model import TimeStampedModel
 from adminmodule.models.shift_timings_model import WorkShiftsModel
 
 class Employees(TimeStampedModel):
+    """Employee model for creating employees."""
+
     STATUS_CHOICES = (
         ('ACTIVE', 'Active'),
         ('INACTIVE', 'Inactive'),
@@ -28,6 +32,7 @@ class Employees(TimeStampedModel):
     address=models.TextField(null=True, blank=True)
 
     def __str__(self):
+        """return string response of the object"""
         return self.user.name
 
 

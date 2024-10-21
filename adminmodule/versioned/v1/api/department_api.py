@@ -1,3 +1,5 @@
+"""Parent and Department API."""
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from adminmodule.models.department_model import DepartmentModel, ParentModel
@@ -7,135 +9,81 @@ from utils.helper.permission import SuperuserPermission
 
 class ParentGetAPI(APIView):
     """Parent Get API View."""
-    permission_classes = [SuperuserPermission]  # Superuser permissions required for access
-
+    permission_classes=[SuperuserPermission]
+    
     def get(self, request):
-        """Handle GET requests to retrieve all parent records."""
-        # Fetch all ParentModel records
+        """Handle GET requests and return response."""
         queryset = ParentModel.objects.all()
-        
-        # Serialize the queryset
         serializer = ParentSerializer(queryset, many=True)
-        
-        # Return the response with standardized format
         return Response(
             {
-                "message": "Parent records fetched successfully.",
-                "data": serializer.data if serializer.data else []
+                "message": "Parent fetched successfully.",
+                "data": serializer.data
             },
             status=status.HTTP_200_OK
         )
 
 class DepartmentGetAPI(APIView):
     """Department Get API View."""
-    permission_classes = [SuperuserPermission]  # Superuser permissions required for access
+    permission_classes=[SuperuserPermission]
 
     def get(self, request):
-        """Handle GET requests to retrieve all department records."""
-        # Fetch all DepartmentModel records
+        """Handle GET requests and return response."""
         queryset = DepartmentModel.objects.all()
-        
-        # Serialize the queryset
         serializer = DepartmentSerializer(queryset, many=True)
-        
-        # Return the response with standardized format
         return Response({
-            "message": "Departments fetched successfully.",
-            "data": serializer.data if serializer.data else []
+            "messege":"Departments fetched successfully",
+            "data": serializer.data
             },
-            status=status.HTTP_200_OK
+            status= status.HTTP_200_OK
         )
         
     def post(self, request):
-        """Handle POST requests to create a new department."""
-        # Initialize serializer with request data
-        serializer = DepartmentSerializer(data=request.data)
-        
-        # Validate and save if data is valid
+        """Handle POST requests and save the request data."""
+        data=request.data
+        Parent=ParentModel.objects.get(parent_dept=data["parent"])
+        data["parent"]=Parent.id
+        serializer = DepartmentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response({
-                "message": "Department created successfully.",
-                "data": serializer.data
-            }, status=status.HTTP_201_CREATED)
-        
-        # If data is invalid, return validation errors with standardized format
-        return Response({
-            "message": "Department creation failed.",
-            "errors": serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DepartmentGetDetailAPI(APIView):
     """Department Detail API View."""
-    permission_classes = [SuperuserPermission]  # Superuser permissions required for access
-
+    permission_classes=[SuperuserPermission]
     def get(self, request, id):
-        """Retrieve a specific department by its ID."""
+        """Retrieve a specific department by ID."""
         try:
-            # Fetch the department by its ID
             department = DepartmentModel.objects.get(id=id)
-            
-            # Serialize the department data
             serializer = DepartmentSerializer(department)
-            
-            # Return the response with standardized format
-            return Response({
-                "message": "Department details fetched successfully.",
-                "data": serializer.data if serializer.data else []
-            }, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except DepartmentModel.DoesNotExist:
-            # Handle the case where the department is not found
-            return Response({
-                "message": "Department not found.",
-                "data": []
-            }, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Department not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    def patch(self, request, id):
-        """Handle PATCH requests to partially update a department."""
+    def put(self, request, id):
+        """Handle PATCH requests and update the department."""
         try:
-            # Fetch the department by its ID
             queryset = DepartmentModel.objects.get(id=id)
         except DepartmentModel.DoesNotExist:
-            # Handle the case where the department is not found
-            return Response({
-                "message": "Department not found.",
-                "data": []
-            }, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Department not found'}, status=status.HTTP_404_NOT_FOUND)
         
-        # Initialize serializer with the existing department instance and new data
         serializer = DepartmentSerializer(queryset, data=request.data, partial=True)
-        
-        # Validate and save if data is valid
         if serializer.is_valid():
             serializer.save()
-            return Response({
-                "message": "Department updated successfully.",
-                "data": serializer.data
-            }, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         
-        # Return validation errors if the data is invalid
-        return Response({
-            "message": "Department update failed.",
-            "errors": serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
-        """Handle DELETE requests to delete a department by its ID."""
+        """Handle DELETE requests and delete data from department model."""
+        
         try:
-            # Fetch the department by its ID
             queryset = DepartmentModel.objects.get(id=id)
-        except DepartmentModel.DoesNotExist:
-            # Handle the case where the department is not found
-            return Response({
-                "message": "Department not found.",
-                "data": []
-            }, status=status.HTTP_404_NOT_FOUND)
+        except:
+            return Response({"error":"queryset not found"}, status= status.HTTP_400_BAD_REQUEST)
         
-        # Delete the department
         queryset.delete()
-        
-        # Return success message for deletion
-        return Response({
-            "message": "Department deleted successfully.",
-            "data": []
-        }, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message":"Employee deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
