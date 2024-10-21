@@ -9,40 +9,51 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from adminmodule.models.user_model import User
 from adminmodule.versioned.v1.serializer.user_serializer import UserSerializer
 
-
 class LoginAPI(APIView):
-    """Login API."""
+    """API for user login."""
 
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny] 
 
     def post(self, request):
-        """Get user with given username and password."""
-        username = request.data.get("username")
-        password = request.data.get("password")
+        """Handle POST request for user login with username/email and password."""
+        
+        username = request.data.get("username")  
+        password = request.data.get("password")  
+        
+        user_exists = User.objects.filter(username=username).exists() or User.objects.filter(email=username).exists()
 
-        user = User.objects.filter(username=username).exists()
-        if not user:
-            user = User.objects.filter(email=username).exists()
+        if not user_exists:
+            return Response(
+                {
+                    "message": "Authentication failed. User does not exist."
+                }, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = User.objects.filter(username=username).first() or User.objects.filter(email=username).first()
 
         if user:
-            try:
-                user = User.objects.get(username=username)
-            except User.DoesNotExist:
-                try:
-                    user = User.objects.get(email=username)
-                except User.DoesNotExist:
-                    return Response({'message': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
+            if user.check_password(password):  
+                refresh = RefreshToken.for_user(user)  
+                access_token = str(refresh.access_token) 
 
-            if user.check_password(password):
-                
-                refresh = RefreshToken.for_user(user)
-                access_token = str(refresh.access_token)
                 serializer = UserSerializer(user)
                 my_data = serializer.data
-                my_data["access_token"] = access_token
-                my_data["refresh_token"] = str(refresh)
-                return Response(my_data, status=status.HTTP_200_OK)
+                my_data["access_token"] = access_token 
+                my_data["refresh_token"] = str(refresh) 
+                
+                return Response(my_data, status=status.HTTP_200_OK) 
 
-            return Response({"message": "Login Failed. Password is Incorrect"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    "message": "Login Failed. Password is Incorrect"
+                }, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-        return Response({"message": "Authentication failed. User does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {
+                "message": "Authentication failed. User does not exist."
+            }, 
+            status=status.HTTP_400_BAD_REQUEST
+        )

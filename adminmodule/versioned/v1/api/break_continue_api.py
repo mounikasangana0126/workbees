@@ -3,100 +3,205 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from adminmodule.versioned.v1.serializer.breakentry_serializer import BreakEntrySerializer
 from adminmodule.models.break_entry_model import BreakEntry
+from adminmodule.models.employee_model import Employees
+from adminmodule.models.time_entry_model import TimeEntry
 from django.utils import timezone
 from rest_framework.permissions import IsAuthenticated
 
-class BreakContinueAPI(APIView):
-    """BreakContinue API"""
+class BreakAPI(APIView):
+    """ List all break start and start end."""
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         """Handle GET request to fetch all the break entry records of an employee."""
-        snippet = BreakEntry.objects.filter(time_entry__employee__user=request.user)
+        
+        timee = timezone.now()
+        timee_date = timee.date()
+        employee = Employees.objects.get(user = request.user.id)
+        try:
+            timeentry = TimeEntry.objects.get(employee = employee, clock_in__date = timee_date )
+        except TimeEntry.DoesNotExist:
+            return Response(
+                {
+                    'message':' You have not clock_in yet..',
+                    'data':[]
+                },
+                status=status.HTTP_200_OK
+            )
+        snippet = BreakEntry.objects.filter(time_entry = timeentry)
+        if not snippet.exists():
+            return Response(
+                {
+                    'message':'There is no breaks yet..',
+                    'data':[]
+                },
+                status=status.HTTP_200_OK
+            )
         serializer = BreakEntrySerializer(snippet, many=True)
-        return Response({
-            'message': 'Break entry records of an employee fetched successfully',
-            'data': serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                'message':'All breaks on today fetched..',
+                'data': serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
 
     def post(self, request):
         """Handle POST request to add break entry record to a time entry of an employee."""
-        serializer = BreakEntrySerializer(data=request.data)
+        
+        timee = timezone.now()
+        timee_date = timee.date()
+        employee = Employees.objects.get(user = request.user.id)
+        try:
+            timeentry = TimeEntry.objects.get(employee = employee, clock_in__date = timee_date)
+        except TimeEntry.DoesNotExist:
+            return Response(
+                {
+                    'message':' You have not clock_in yet..',
+                    'data':[]
+                },
+                status=status.HTTP_200_OK
+            )
+        data = request.data
+        data['break_start'] = timee
+        data['time_entry'] = timeentry.id
+        serializer = BreakEntrySerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response({
-                'message': 'Break entry created successfully',
-                'data': serializer.data
-            }, status=status.HTTP_201_CREATED)
-        return Response({
-            'message': 'Invalid data',
-            'data': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    'message':'Break_start created successfully',
+                    'data':serializer.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            {
+                'message':serializer.errors,
+                'data':[]
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+class BreakContinueAPI(APIView):
+    """ Break continue to save break end time."""
+    
+    def post(self, request):
+        """ Handle Post request to save break continue time.."""
+        
+        timee = timezone.now()
+        timee_date = timee.date()
+        employee = Employees.objects.get(user = request.user.id)
+        try:
+            timeentry = TimeEntry.objects.get(employee = employee, clock_in__date = timee_date)
+        except TimeEntry.DoesNotExist:
+            return Response(
+                {
+                    'message':' You have not clock_in yet..',
+                    'data':[]
+                },
+                status=status.HTTP_200_OK
+            )
+        try:
+            breaks = BreakEntry.objects.filter(time_entry = timeentry).last()
+        except BreakEntry.DoesNotExist():
+            return Response(
+                {
+                    'message':'Break entry not found..',
+                    'data':[]
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        breaks.break_end=timee
+        breaks.save()
+        serializer = BreakEntrySerializer(breaks)
+        return Response(
+            {
+                'message':'Break continue saved..',
+                'data':serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
+
+
+
 
 
 class BreakContinueDetailAPI(APIView):
+    """ List a break.."""
+    
     permission_classes = [IsAuthenticated]
-
     def get(self, request, id):
         """Handle GET request to fetch a particular break entry record."""
+        
         try:
             snippet = BreakEntry.objects.get(id=id)
         except BreakEntry.DoesNotExist:
-            return Response({
-                'message': 'BreakEntry not found',
-                'data': {}
-            }, status=status.HTTP_404_NOT_FOUND)
-        
+            return Response(
+                {
+                    'message':'Break Entry not found',
+                    'data':[]
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
         serializer = BreakEntrySerializer(snippet)
-        return Response({
-            'message': 'Break record fetched successfully',
-            'data': serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                'message':'Break Entry fetched successfully',
+                'data': serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
 
     def put(self, request, id):
         """Handle PUT request to update break entry record."""
+        
         try:
-            time_entry = request.data.get('time_entry')
-            if not time_entry:
-                return Response({
-                    'message': 'time_entry not provided',
-                    'data': {}
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            queryset = BreakEntry.objects.get(id=id)
-        except BreakEntry.DoesNotExist:
-            return Response({
-                'message': 'BreakEntry not found',
-                'data': {}
-            }, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'message': str(e),
-                'data': {}
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        queryset.break_end = timezone.now()
-        queryset.save()
-        total_seconds = (queryset.break_end - queryset.break_start).total_seconds()
-        serializer = BreakEntrySerializer(queryset)
-        return Response({
-            'message': 'Break time updated successfully',
-            'data': serializer.data,
-            'total_seconds': total_seconds
-        }, status=status.HTTP_200_OK)
+            breaks = BreakEntry.objects.get(id = id)
+        except BreakEntry.DoesNotExist():
+            return Response(
+                {
+                    'message':'Break Entry not found',
+                    'data':[]
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer = BreakEntrySerializer(breaks, request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    'message':'break entry updated..',
+                    'data':serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
+        return Response(
+            {
+                'message':serializer.data,
+                'data':[]
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
     def delete(self, request, id):
         """Handle DELETE request to delete a particular break entry."""
+        
         try:
             queryset = BreakEntry.objects.get(id=id)
         except BreakEntry.DoesNotExist:
-            return Response({
-                'message': 'BreakEntry not found',
-                'data': {}
-            }, status=status.HTTP_404_NOT_FOUND)
-        
+            return Response(
+                {
+                    'message':' break entry not found',
+                    'data':[]
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
         queryset.delete()
-        return Response({
-            'message': 'BreakEntry deleted successfully',
-            'data': {}
-        }, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {
+                'message':'break entry deleted',
+                'data':[]
+            },
+            status=status.HTTP_204_NO_CONTENT
+        )
