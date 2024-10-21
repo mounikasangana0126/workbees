@@ -4,10 +4,10 @@ from adminmodule.versioned.v1.api.department_api import DepartmentGetAPI,Departm
 from adminmodule.versioned.v1.api.shift_timings_api import ShiftTimingGetAPI,ShiftTimingDetailGetAPI
 from adminmodule.versioned.v1.api.employee_api import EmployeeGetAPI
 from adminmodule.versioned.v1.api.employee_admin_api import EmployeeGetAdminAPI, EmployeeGetAdminDetailAPI
-from adminmodule.versioned.v1.api.checkin_checkout_api import CheckInCheckOutAPI, CheckInCheckOutDetailsAPI
+from adminmodule.versioned.v1.api.checkin_checkout_api import TimeEntryCheckInAPI, TimeEntryCheckOutAPI, TimeEntryCheckInCheckOutDetailsAPI
 from adminmodule.versioned.v1.api.leave_api import  LeaveAPI,LeaveDetailAPI
 from adminmodule.versioned.v1.api.leave_admin_api import LeaveAdminAPI,LeaveAdminDetailAPI
-from adminmodule.versioned.v1.api.break_continue_api import BreakContinueAPI, BreakContinueDetailAPI
+from adminmodule.versioned.v1.api.break_continue_api import BreakAPI, BreakContinueAPI,BreakContinueDetailAPI
 from adminmodule.versioned.v1.api.login_api import LoginAPI
 from adminmodule.versioned.v1.api.designation_api import DesignationGetAPI,DesignationGetDetailAPI
 
@@ -17,11 +17,13 @@ urlpatterns = [
 
 #  User apis
    path('employee/',EmployeeGetAPI.as_view()),
-   path('checkin_checkout/',CheckInCheckOutAPI.as_view()),
-   path('checkin_checkout/<uuid:id>/',CheckInCheckOutDetailsAPI.as_view()),
+   path('checkin/',TimeEntryCheckInAPI.as_view()),
+   path('checkout/', TimeEntryCheckOutAPI.as_view()),
+   path('checkout/<uuid:id>/',TimeEntryCheckInCheckOutDetailsAPI.as_view()),
    path('leave/',LeaveAPI.as_view()),
    path('leave/<uuid:id>/',LeaveDetailAPI.as_view()),
-   path('break/',BreakContinueAPI.as_view()),
+   path('break/',BreakAPI.as_view()),
+   path('break-continue/',BreakContinueAPI.as_view()),
    path('break/<uuid:id>/',BreakContinueDetailAPI.as_view()),
    
 #  Admin apis

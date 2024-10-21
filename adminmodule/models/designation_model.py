@@ -3,6 +3,8 @@ from utils.helper.timestamp_model import TimeStampedModel
 from adminmodule.models.department_model import DepartmentModel
 
 class DesignationModel(TimeStampedModel):
+    """ Designation Model """
+    
     department= models.ForeignKey(DepartmentModel, on_delete=models.CASCADE)
     designation_name = models.CharField(max_length=255,unique=True)
     designation_is_active = models.BooleanField(default=True)

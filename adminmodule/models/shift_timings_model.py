@@ -3,6 +3,7 @@ from datetime import datetime,date
 from utils.helper.timestamp_model import TimeStampedModel
 
 class WorkShiftsModel(TimeStampedModel):
+    """ Workshift Model.."""
     shift_name = models.CharField(max_length=255)
     shift_start_time = models.TimeField()
     shift_end_time = models.TimeField()
