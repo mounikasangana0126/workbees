@@ -25,7 +25,6 @@ class EmployeeGetAPI(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
         serializer = EmployeeSerializer(snippet) 
-        
         return Response(
             {
                 "message": "Employee details fetched successfully",

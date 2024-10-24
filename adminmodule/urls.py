@@ -10,6 +10,8 @@ from adminmodule.versioned.v1.api.leave_admin_api import LeaveAdminAPI,LeaveAdmi
 from adminmodule.versioned.v1.api.break_continue_api import BreakAPI, BreakContinueAPI,BreakContinueDetailAPI
 from adminmodule.versioned.v1.api.login_api import LoginAPI
 from adminmodule.versioned.v1.api.designation_api import DesignationGetAPI,DesignationGetDetailAPI
+from adminmodule.versioned.v1.api.task_admin import TaskAdminAPI,TaskAdminDetailsAPI
+from adminmodule.versioned.v1.api.task_employee import TaskEmployeeAPI
 
 urlpatterns = [
 
@@ -25,6 +27,8 @@ urlpatterns = [
    path('break/',BreakAPI.as_view()),
    path('break-continue/',BreakContinueAPI.as_view()),
    path('break/<uuid:id>/',BreakContinueDetailAPI.as_view()),
+   path('task_employee/',TaskEmployeeAPI.as_view()),
+   path('task_employee/<uuid:id>/',TaskEmployeeAPI.as_view()),
    
 #  Admin apis
    path('shift_time/',ShiftTimingGetAPI.as_view()),
@@ -38,5 +42,7 @@ urlpatterns = [
    path('employee_admin/<uuid:id>/',EmployeeGetAdminDetailAPI.as_view()),
    path('leave_admin/',LeaveAdminAPI.as_view()),
    path('leave_admin/<uuid:id>/',LeaveAdminDetailAPI.as_view()),
+   path('task_admin/',TaskAdminAPI.as_view()),
+   path('task_admin/<uuid:id>/',TaskAdminDetailsAPI.as_view()),
   
 ]
