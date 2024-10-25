@@ -10,6 +10,10 @@ from adminmodule.versioned.v1.api.leave_admin_api import LeaveAdminAPI,LeaveAdmi
 from adminmodule.versioned.v1.api.break_continue_api import BreakAPI, BreakContinueAPI,BreakContinueDetailAPI
 from adminmodule.versioned.v1.api.login_api import LoginAPI
 from adminmodule.versioned.v1.api.designation_api import DesignationGetAPI,DesignationGetDetailAPI
+from adminmodule.versioned.v1.api.leavescount_api import LeavesCountGetAPI
+from adminmodule.versioned.v1.api.presentemployee_api import PresentEmployeeGetAPI, AbsentEmployeeGetAPI
+from adminmodule.versioned.v1.api.recent_logins_api import RecentLoginEmployeeGetAPI, GetSingleDayLoginsTask
+from adminmodule.versioned.v1.api.attendence_history_api import AttendanceHistoryGetAPI
 
 urlpatterns = [
 
@@ -25,6 +29,8 @@ urlpatterns = [
    path('break/',BreakAPI.as_view()),
    path('break-continue/',BreakContinueAPI.as_view()),
    path('break/<uuid:id>/',BreakContinueDetailAPI.as_view()),
+   path('leavecount/', LeavesCountGetAPI.as_view() ),
+   path('attendencehistory/', AttendanceHistoryGetAPI.as_view()),
    
 #  Admin apis
    path('shift_time/',ShiftTimingGetAPI.as_view()),
@@ -38,5 +44,9 @@ urlpatterns = [
    path('employee_admin/<uuid:id>/',EmployeeGetAdminDetailAPI.as_view()),
    path('leave_admin/',LeaveAdminAPI.as_view()),
    path('leave_admin/<uuid:id>/',LeaveAdminDetailAPI.as_view()),
+   path('employeepresent/<uuid:id>/',PresentEmployeeGetAPI.as_view()),
+   path('employeeabsent/<uuid:id>/',AbsentEmployeeGetAPI.as_view()),
+   path('recent_logins/',RecentLoginEmployeeGetAPI.as_view()),
+   path('date_logins/<str:date>/', GetSingleDayLoginsTask.as_view()),
   
 ]

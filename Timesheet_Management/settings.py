@@ -161,3 +161,12 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
 }
+
+""" Adding duplicate data for testing.."""
+HOLIDAYS = [
+    
+    "2024-01-01",
+    "2024-10-19", 
+    "2024-10-25",
+    
+]
