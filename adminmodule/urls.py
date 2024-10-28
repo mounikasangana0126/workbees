@@ -12,10 +12,12 @@ from adminmodule.versioned.v1.api.login_api import LoginAPI
 from adminmodule.versioned.v1.api.designation_api import DesignationGetAPI,DesignationGetDetailAPI
 from adminmodule.versioned.v1.api.task_admin import TaskAdminAPI,TaskAdminDetailsAPI
 from adminmodule.versioned.v1.api.task_employee import TaskEmployeeAPI
-
+from adminmodule.versioned.v1.api.logout_api import LogoutAPI
+from adminmodule.versioned.v1.api.qrcode_api import QRCodeGeneratorAPI,QRCodeValidatorAPI
 urlpatterns = [
 
    path('login/', LoginAPI.as_view(), name='login'),
+   path('logout/',LogoutAPI.as_view(),name='logout'),
 
 #  User apis
    path('employee/',EmployeeGetAPI.as_view()),
@@ -29,6 +31,8 @@ urlpatterns = [
    path('break/<uuid:id>/',BreakContinueDetailAPI.as_view()),
    path('task_employee/',TaskEmployeeAPI.as_view()),
    path('task_employee/<uuid:id>/',TaskEmployeeAPI.as_view()),
+   path('qrcode_generator/',QRCodeGeneratorAPI.as_view()),
+   path('qrcode_validator/',QRCodeValidatorAPI.as_view()),
    
 #  Admin apis
    path('shift_time/',ShiftTimingGetAPI.as_view()),
