@@ -6,6 +6,10 @@ from adminmodule.models.department_model import DepartmentModel, ParentModel
 from adminmodule.versioned.v1.serializer.department_serializer import DepartmentSerializer, ParentSerializer
 from rest_framework import status
 from utils.helper.permission import SuperuserPermission
+from adminmodule.models.time_entry_model import TimeEntry
+from adminmodule.models.employee_model import Employees
+from django.utils import timezone
+from adminmodule.models.leave_model import Leave
 
 class ParentGetAPI(APIView):
     """Parent Get API View."""
@@ -29,10 +33,19 @@ class DepartmentGetAPI(APIView):
 
     def get(self, request):
         """Handle GET requests and return response."""
+        
         queryset = DepartmentModel.objects.all()
         serializer = DepartmentSerializer(queryset, many=True)
+        present_employee = TimeEntry.objects.filter(clock_in__date = timezone.now().date()).count()
+        all_employee = Employees.objects.filter(emp_is_active = True).count()
+        total_absents = all_employee - present_employee
+        leave_requests = Leave.objects.filter(status = 'PENDING').count()
         return Response({
             "messege":"Departments fetched successfully",
+            "all_employee":all_employee,
+            "present_employee":present_employee,
+            "total_absents":total_absents,
+            "leave_requests": leave_requests,
             "data": serializer.data
             },
             status= status.HTTP_200_OK
