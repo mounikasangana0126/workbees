@@ -153,6 +153,9 @@ REST_FRAMEWORK = {
     ],
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 
 from datetime import timedelta
 SIMPLE_JWT = {
@@ -170,3 +173,4 @@ HOLIDAYS = [
     "2024-10-25",
     
 ]
+
