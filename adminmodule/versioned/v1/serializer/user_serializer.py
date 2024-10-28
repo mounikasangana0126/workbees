@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from adminmodule.models.user_model import User
+from adminmodule.models.employee_model import Employees
 class UserSerializer(serializers.ModelSerializer):
     profile_pic = serializers.SerializerMethodField(read_only=True)
     employee_id = serializers.CharField(source='employee.employee_id', default=None,read_only=True)

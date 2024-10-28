@@ -2,6 +2,7 @@ from django.db import models
 from adminmodule.models.user_model import User
 from django.utils import timezone
 from adminmodule.models.time_entry_model import TimeEntry
+
 from utils.helper.timestamp_model import TimeStampedModel
 
 
