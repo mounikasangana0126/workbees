@@ -154,11 +154,30 @@ REST_FRAMEWORK = {
     ],
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 
 from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
+<<<<<<< HEAD
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }
+=======
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+}
+
+""" Adding duplicate data for testing.."""
+HOLIDAYS = [
+    
+    "2024-01-01",
+    "2024-10-19", 
+    "2024-10-25",
+    
+]
+
+>>>>>>> d2989fda32b05ede44c3737152e03f297354bb13
