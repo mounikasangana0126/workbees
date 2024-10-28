@@ -162,13 +162,8 @@ from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
-<<<<<<< HEAD
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
-}
-=======
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': False,
 }
 
 """ Adding duplicate data for testing.."""
@@ -180,4 +175,3 @@ HOLIDAYS = [
     
 ]
 
->>>>>>> d2989fda32b05ede44c3737152e03f297354bb13
