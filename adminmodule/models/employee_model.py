@@ -35,5 +35,4 @@ class Employees(TimeStampedModel):
         """return string response of the object"""
         return self.user.name
 
-
     
