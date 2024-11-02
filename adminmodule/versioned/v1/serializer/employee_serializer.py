@@ -15,9 +15,9 @@ class EmployeeSerializer(serializers.ModelSerializer):
     """Employee serializer for employee profile"""
     
     user_data=UserSerializer(source='user')
-    department_data=DepartmentSerializer(source='designation.department',read_only=True)
-    designation_data=DesignationSerializer(source='designation',read_only=True)
-    shift_timings_data=ShiftTimeSerializer(source='employee_shift',read_only=True)
+    department_data=DepartmentSerializer(source='designation.department',write_only=True)
+    designation_data=DesignationSerializer(source='designation',write_only=True)
+    shift_timings_data=ShiftTimeSerializer(source='employee_shift',write_only=True)
     reporting_head = serializers.SerializerMethodField()
     
     class Meta:

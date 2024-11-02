@@ -4,8 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from adminmodule.models.task_model import Task
-from adminmodule.versioned.v1.serializer.task_model_serializer import TaskSerializer
+from adminmodule.models.task_model import Task, TaskEmployeeModel
+from adminmodule.models.employee_model import Employees
+from adminmodule.versioned.v1.serializer.task_model_serializer import TaskSerializer, TaskEmployeeSerializer
 
 class TaskEmployeeAPI(APIView):
     """API for employees to view and update their assigned tasks."""
@@ -16,8 +17,8 @@ class TaskEmployeeAPI(APIView):
         Get tasks assigned to the authenticated employee.
         """
         employee = request.user.employees
-        tasks = Task.objects.filter(assigned_to=employee)
-        serializer = TaskSerializer(tasks, many=True)
+        tasks = TaskEmployeeModel.objects.filter(employee=employee)
+        serializer = TaskEmployeeSerializer(tasks, many=True)
         return Response(
             {
                 "message": "Tasks fetched successfully",
@@ -25,15 +26,15 @@ class TaskEmployeeAPI(APIView):
             },
             status=status.HTTP_200_OK
         )
-
-    def put(self, request, id=None):
+    def put(self, request, id):
         """
         Update a task assigned to the authenticated employee.
         """
-        employee = request.user.employees
+        employee = request.user
+        employee = Employees.objects.get(user__name = employee)
         try:
-            task = Task.objects.get(id=id, assigned_to=employee)
-        except Task.DoesNotExist:
+            task = TaskEmployeeModel.objects.get(id=id, employee=employee.id)
+        except TaskEmployeeModel.DoesNotExist:
             return Response(
                 {
                     "message": "Task not found or you are not authorized to update this task",
@@ -42,7 +43,8 @@ class TaskEmployeeAPI(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
         
-        serializer = TaskSerializer(task, data=request.data, partial=True)
+        
+        serializer = TaskEmployeeSerializer(task, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(
