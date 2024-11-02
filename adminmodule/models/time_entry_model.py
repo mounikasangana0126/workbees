@@ -1,3 +1,5 @@
+"""Time entry model."""
+
 from django.db import models
 from adminmodule.models.employee_model import Employees
 from django.utils import timezone

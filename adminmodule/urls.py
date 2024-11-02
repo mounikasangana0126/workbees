@@ -13,7 +13,7 @@ from adminmodule.versioned.v1.api.designation_api import DesignationGetAPI,Desig
 from adminmodule.versioned.v1.api.task_admin import TaskAdminAPI,TaskAdminDetailsAPI
 from adminmodule.versioned.v1.api.task_employee import TaskEmployeeAPI
 from adminmodule.versioned.v1.api.logout_api import LogoutAPI
-from adminmodule.versioned.v1.api.qrcode_api import QRCodeGeneratorAPI,QRCodeValidatorAPI
+from adminmodule.versioned.v1.api.qrcode_api import QrCodeGeneration,QrCodeValidateAPI
 from adminmodule.versioned.v1.api.leavescount_api import LeavesCountGetAPI
 from adminmodule.versioned.v1.api.presentemployee_api import PresentEmployeeGetAPI, AbsentEmployeeGetAPI
 from adminmodule.versioned.v1.api.recent_logins_api import RecentLoginEmployeeGetAPI, GetSingleDayLoginsTask
@@ -28,7 +28,6 @@ urlpatterns = [
    path('reset_password/', ResetPasswordAPI.as_view()),
    path('reset_password_request/', PasswordResetRequestAPI.as_view(), name='password_reset_request'),
    path('reset_password/<str:uidb64>/<str:token>/', PasswordResetConfirmAPI.as_view(), name='password_reset_confirm'),
-
 #  User apis
    path('employee/',EmployeeGetAPI.as_view()),
    path('checkin/',TimeEntryCheckInAPI.as_view()),
@@ -41,8 +40,8 @@ urlpatterns = [
    path('break/<uuid:id>/',BreakContinueDetailAPI.as_view()),
    path('task_employee/',TaskEmployeeAPI.as_view()),
    path('task_employee/<uuid:id>/',TaskEmployeeAPI.as_view()),
-   path('qrcode_generator/',QRCodeGeneratorAPI.as_view()),
-   path('qrcode_validator/',QRCodeValidatorAPI.as_view()),
+   path('qrcode_generator/',QrCodeGeneration.as_view()),
+   path('qrcode_validator/',QrCodeValidateAPI.as_view()),
    path('leavecount/', LeavesCountGetAPI.as_view() ),
    path('attendencehistory/', AttendanceHistoryGetAPI.as_view()),
    path('qrcode/', QrCodeGeneration.as_view()),

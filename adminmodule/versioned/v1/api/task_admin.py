@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from adminmodule.models.task_model import Task
+from adminmodule.models.employee_model import Employees
 from adminmodule.versioned.v1.serializer.task_model_serializer import TaskSerializer
 from utils.helper.permission import SuperuserPermission
 from rest_framework.permissions import IsAuthenticated
@@ -15,18 +16,16 @@ class TaskAdminAPI(APIView):
 
     def get(self, request):
         """Get all tasks."""
-        if request.user.is_admin==True:
-            """Get all tasks if user is admin."""
 
-            tasks = Task.objects.all()
-            serializer = TaskSerializer(tasks, many=True) 
-            return Response(
-                {
-                    "message": "Data fetched successfully",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+        tasks = Task.objects.all()
+        serializer = TaskSerializer(tasks, many=True) 
+        return Response(
+            {
+                "message": "Data fetched successfully",
+                "data": serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
 
     def post(self, request):
         """Create a new task and assign it to employees."""
