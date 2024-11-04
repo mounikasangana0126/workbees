@@ -26,6 +26,32 @@ class TaskEmployeeAPI(APIView):
             },
             status=status.HTTP_200_OK
         )
+class TaskEmployeeDetailsAPI(APIView):
+    def get(self,request,id):
+        """
+        Get details of a specific task assigned to the authenticated employee.
+        """
+        employee = request.user
+        employee = Employees.objects.get(user__name = employee)
+        try:
+            task = TaskEmployeeModel.objects.get(id=id, employee=employee.id)
+        except TaskEmployeeModel.DoesNotExist:
+            return Response(
+                {
+                    "message": "Task not found or you are not authorized to view this task",
+                    "data": []
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        serializer = TaskEmployeeSerializer(task)
+        return Response(
+            {
+                "message": "Task fetched successfully",
+                "data": serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
     def put(self, request, id):
         """
         Update a task assigned to the authenticated employee.
