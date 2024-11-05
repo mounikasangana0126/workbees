@@ -23,11 +23,11 @@ class Task(TimeStampedModel):
         ('MEDIUM', 'Medium'),
         ('HIGH', 'High'),
     )
-    
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='LOW')
     title = models.CharField(max_length=255)
+    task_image=models.ImageField(upload_to='profile_pics',null=True,blank=True)
     description = models.TextField()
-    assigned_to = models.ManyToManyField(Employees, related_name='tasks')
+    assigned_to = models.ManyToManyField(Employees)
     created_by = models.ForeignKey(Employees, on_delete=models.CASCADE, related_name='created_tasks')
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='PENDING')
     due_date = models.DateField(null=True, blank=True)
@@ -57,6 +57,8 @@ class TaskEmployeeModel(TimeStampedModel):
         
         if all(assignment.status == 'COMPLETED' for assignment in self.task.taskemployeemodel_set.all()):
             self.task.status = 'COMPLETED'
-        else:
+        elif all(assignment.status == 'IN_PROGRESS' for assignment in self.task.taskemployeemodel_set.all()):
             self.task.status = 'IN_PROGRESS'
+        else:
+            self.task.status = 'PENDING'
         self.task.save()
