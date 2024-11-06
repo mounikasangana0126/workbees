@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from adminmodule.models.task_model import Task, TaskEmployeeModel
 from adminmodule.models.employee_model import Employees
-from adminmodule.versioned.v1.serializer.task_model_serializer import TaskSerializer, TaskEmployeeSerializer
+from adminmodule.versioned.v1.serializer.task_model_serializer import TaskSerializer, TaskEmployeeSerializer, TaskEmployeeSerializerTemp
 
 class TaskEmployeeAPI(APIView):
     """API for employees to view and update their assigned tasks."""
@@ -22,6 +22,32 @@ class TaskEmployeeAPI(APIView):
         return Response(
             {
                 "message": "Tasks fetched successfully",
+                "data": serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
+class TaskEmployeeDetailsAPI(APIView):
+    def get(self,request,id):
+        """
+        Get details of a specific task assigned to the authenticated employee.
+        """
+        employee = request.user
+        employee = Employees.objects.get(user__name = employee)
+        try:
+            task = TaskEmployeeModel.objects.get(id=id, employee=employee.id)
+        except TaskEmployeeModel.DoesNotExist:
+            return Response(
+                {
+                    "message": "Task not found or you are not authorized to view this task",
+                    "data": []
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        serializer = TaskEmployeeSerializer(task)
+        return Response(
+            {
+                "message": "Task fetched successfully",
                 "data": serializer.data
             },
             status=status.HTTP_200_OK

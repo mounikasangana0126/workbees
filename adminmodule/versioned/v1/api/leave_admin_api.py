@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from adminmodule.models.leave_model import Leave 
-from adminmodule.versioned.v1.serializer.leave_serializer import PostLeaveSerializer ,GetLeaveSerializer
+from adminmodule.versioned.v1.serializer.leave_serializer import GetLeaveSerializer,AdminLeavePostSerializer
 from adminmodule.models.employee_model import Employees 
 from rest_framework.permissions import IsAuthenticated  
 from utils.helper.permission import SuperuserPermission  
@@ -31,23 +31,9 @@ class LeaveAdminAPI(APIView):
     def post(self, request, *args, **kwargs):
         """ Handle post request to add leave record of an employee."""
 
-        try:
-            data=request.data.get('employee')
-            employee= Employees.objects.get(employee_id=data["employee_id"])
-            if not employee:
-                raise Exception("Employee not found")
-        except Exception as e:
-            return Response(
-                {
-                    'message': str(e),
-                    'data': [],
-                }, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        serializer = PostLeaveSerializer(data=request.data) 
+        serializer = AdminLeavePostSerializer(data=request.data) 
         if serializer.is_valid():  
-            serializer.save(employee=employee,status="Approved")  
+            serializer.save(status='APPROVED')  
             return Response(
                 {
                     'message': 'Leave record created successfully',

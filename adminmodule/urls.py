@@ -11,7 +11,7 @@ from adminmodule.versioned.v1.api.break_continue_api import BreakAPI, BreakConti
 from adminmodule.versioned.v1.api.login_api import LoginAPI, ResetPasswordAPI
 from adminmodule.versioned.v1.api.designation_api import DesignationGetAPI,DesignationGetDetailAPI
 from adminmodule.versioned.v1.api.task_admin import TaskAdminAPI,TaskAdminDetailsAPI
-from adminmodule.versioned.v1.api.task_employee import TaskEmployeeAPI
+from adminmodule.versioned.v1.api.task_employee import TaskEmployeeAPI, TaskEmployeeDetailsAPI
 from adminmodule.versioned.v1.api.logout_api import LogoutAPI
 from adminmodule.versioned.v1.api.qrcode_api import QrCodeGeneration,QrCodeValidateAPI
 from adminmodule.versioned.v1.api.leavescount_api import LeavesCountGetAPI
@@ -33,18 +33,18 @@ urlpatterns = [
    path('checkin/',TimeEntryCheckInAPI.as_view()),
    path('checkout/', TimeEntryCheckOutAPI.as_view()),
    path('checkout/<uuid:id>/',TimeEntryCheckInCheckOutDetailsAPI.as_view()),
-   path('leave/',LeaveAPI.as_view()),
-   path('leave/<uuid:id>/',LeaveDetailAPI.as_view()),
+   path('leave_employee/',LeaveAPI.as_view()),
+   path('leave_employee/<uuid:id>/',LeaveDetailAPI.as_view()),
    path('break/',BreakAPI.as_view()),
    path('break-continue/',BreakContinueAPI.as_view()),
    path('break/<uuid:id>/',BreakContinueDetailAPI.as_view()),
    path('task_employee/',TaskEmployeeAPI.as_view()),
-   path('task_employee/<uuid:id>/',TaskEmployeeAPI.as_view()),
+   path('task_employee/<uuid:id>/',TaskEmployeeDetailsAPI.as_view()),
    path('qrcode_generator/',QrCodeGeneration.as_view()),
    path('qrcode_validator/',QrCodeValidateAPI.as_view()),
    path('leavecount/', LeavesCountGetAPI.as_view() ),
    path('attendencehistory/', AttendanceHistoryGetAPI.as_view()),
-   path('qrcode/', QrCodeGeneration.as_view()),
+   path('qrcodegenerate/', QrCodeGeneration.as_view()),
    path('qrcodevalidate/', QrCodeValidateAPI.as_view()),
    
 #  Admin apis

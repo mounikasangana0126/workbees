@@ -9,6 +9,7 @@ from adminmodule.models.employee_model import Employees
 from rest_framework.permissions import IsAuthenticated
 class LeaveAPI(APIView):
     """Leave API"""
+    permission_class=[IsAuthenticated]
     def get(self,request,*args,**kwargs):
         """Handle get request to get all leaves."""
         employee = Employees.objects.get(user__name=request.user)
@@ -56,7 +57,7 @@ class LeaveDetailAPI(APIView):
         """ Handle get request to get a particular leave record of an employee"""
         
         try:
-            snippet=Leave.objects.get(id=id)
+            snippet=Leave.objects.get(id=id,employee=request.user.employees)
         except:
             return Response(
                 {
@@ -72,5 +73,32 @@ class LeaveDetailAPI(APIView):
                 'data':serializer.data
             },
             status=status.HTTP_200_OK
+        )
+    def put(self,request,id):
+        try:
+            snippet=Leave.objects.get(id=id,employee=request.user.employees)
+        except:
+            return Response(
+                {
+                    'message':'leave record not found',
+                    'data':[]
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer=GetLeaveSerializer(snippet, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    'message':'Data updated sucessfully',
+                    'data':serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
+        return Response(
+            {
+                'message':'Provided data was invalid.',
+            },
+            status=status.HTTP_400_BAD_REQUEST
         )
 
